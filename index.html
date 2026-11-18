@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Petualangan TIK Kelas 4 SD</title>
+  <title>Petualangan TIK Kelas 4 SD — Avatar 3D & Kuis</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -36,6 +36,23 @@
       transform: translateY(4px);
       box-shadow: none !important;
     }
+    /* Animasi 3D Kepala & Mata Beruang */
+    @keyframes bearFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(1deg); }
+    }
+    @keyframes blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    .avatar-3d-container {
+      animation: bearFloat 3s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    .avatar-eyes {
+      animation: blink 4s infinite;
+      transform-origin: center;
+    }
   </style>
 </head>
 <body class="text-slate-800 pb-24 md:pb-10">
@@ -44,14 +61,14 @@
   <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
     <div class="card-kid max-w-lg w-full p-6 md:p-8 text-center border-amber-300 shadow-[0_8px_0_#FCD34D]">
       <div class="inline-block bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-bold mb-2">
-        🐻 Belajar TIK Seru • Kelas 4 SD
+        🐻 Petualangan TIK • Kelas 4 SD
       </div>
       <h1 class="text-2xl md:text-3xl font-extrabold text-sky-600 mb-2">Halo, Petualang Digital!</h1>
-      <p class="text-slate-600 mb-5">Isi namamu, pilih kelas, dan pilih teman beruangmu sebelum mulai belajar.</p>
+      <p class="text-slate-600 mb-5">Masukkan nama dan kelasmu, lalu pilih warna beruang 3D favoritmu sebelum mulai.</p>
 
-      <!-- Preview Beruang Awal -->
+      <!-- Preview Beruang 3D Bergerak -->
       <div class="flex justify-center mb-4">
-        <div id="login-bear-preview" class="w-36 h-44 bg-sky-50 rounded-3xl border-2 border-sky-200 flex items-center justify-center p-2"></div>
+        <div id="login-bear-preview" class="w-40 h-48 bg-sky-50 rounded-3xl border-2 border-sky-200 flex items-center justify-center p-2 avatar-3d-container"></div>
       </div>
 
       <div class="space-y-4 text-left">
@@ -91,7 +108,7 @@
 
         <button onclick="loginSiswa()"
           class="w-full mt-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-lg shadow-[0_5px_0_#059669] btn-bouncy">
-          🚀 Masuk & Mulai Belajar!
+          🚀 Masuk & Mulai Petualangan!
         </button>
       </div>
     </div>
@@ -100,10 +117,10 @@
   <!-- ==================== 2. DASHBOARD UTAMA SISWA ==================== -->
   <div id="app-screen" class="hidden max-w-6xl mx-auto p-3 md:p-6">
     
-    <!-- Header Profil Siswa & Avatar Beruang -->
+    <!-- Header Profil Siswa & Avatar 3D -->
     <header class="card-kid p-4 mb-5 flex flex-wrap items-center justify-between gap-4 border-sky-300 shadow-[0_6px_0_#7DD3FC]">
       <div class="flex items-center gap-3">
-        <div id="header-bear-avatar" class="w-16 h-20 bg-amber-50 rounded-2xl border-2 border-amber-200 flex items-center justify-center shrink-0"></div>
+        <div id="header-bear-avatar" class="w-16 h-20 bg-amber-50 rounded-2xl border-2 border-amber-200 flex items-center justify-center shrink-0 avatar-3d-container"></div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="display-nama" class="text-lg md:text-xl font-extrabold text-slate-800">Nama Siswa</h2>
@@ -111,10 +128,10 @@
           </div>
           <div class="flex items-center gap-3 mt-1">
             <span class="bg-amber-100 text-amber-800 font-heading font-bold text-sm px-3 py-1 rounded-xl">
-              ⭐ Poin: <span id="display-poin">0</span>
+              ⭐ Poin Kuis: <span id="display-poin">0</span>
             </span>
             <button onclick="switchTab('toko')" class="text-xs font-heading font-bold text-pink-600 underline">
-              👕 Ganti Baju Beruang
+              🛍️ Toko Kostum 3D
             </button>
           </div>
         </div>
@@ -141,32 +158,30 @@
         📤 Kumpul Tugas
       </button>
       <button onclick="switchTab('toko')" id="nav-toko" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
-        🧸 Toko Beruang
+        🛍️ Toko Kostum
       </button>
       <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
         🏆 Peringkat
       </button>
     </nav>
 
-    <!-- ==================== TAB 1: MATERI & UNDUH PDF ==================== -->
+    <!-- ==================== TAB 1: MATERI & PREVIEW PDF ==================== -->
     <section id="tab-materi" class="tab-content">
       <div class="mb-4">
         <h3 class="text-xl md:text-2xl font-extrabold text-sky-700">📚 Materi Belajar TIK (Bab 1 - 6)</h3>
-        <p class="text-slate-600 text-sm">Baca ringkasan materi dan unduh modul PDF dari Bapak/Ibu Guru di setiap kotak bab.</p>
+        <p class="text-slate-600 text-sm">Pilih bab materi untuk membaca ringkasan dan mengunduh modul PDF dari guru.</p>
       </div>
       <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
     <!-- ==================== TAB 2: KUIS INTERAKTIF BERSTIMULUS ==================== -->
     <section id="tab-kuis" class="tab-content hidden">
-      <!-- Pilih Bab Kuis -->
       <div id="quiz-selector">
-        <h3 class="text-xl md:text-2xl font-extrabold text-emerald-700 mb-1">🎯 Tantangan Kuis Berstimulus</h3>
-        <p class="text-slate-600 text-sm mb-4">Setiap bab berisi 15 soal pilihan ganda (A–C). Jawab dengan teliti untuk mendapatkan ⭐ Poin!</p>
+        <h3 class="text-xl md:text-2xl font-extrabold text-emerald-700 mb-1">🎯 Tantangan Kuis Berstimulus (Bab 1 - 6)</h3>
+        <p class="text-slate-600 text-sm mb-4">Setiap bab memiliki 15 soal pilihan ganda (A–C). Kumpulkan poin sebanyak-banyaknya untuk belanja baju avatar!</p>
         <div id="quiz-bab-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
 
-      <!-- Area Pengerjaan Kuis (State Tersimpan Jika Pindah Tab) -->
       <div id="quiz-runner" class="hidden card-kid p-5 md:p-7 border-emerald-300 shadow-[0_8px_0_#6EE7B7]">
         <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b-2 border-slate-100 mb-4">
           <div>
@@ -183,19 +198,14 @@
           </div>
         </div>
 
-        <!-- Kotak Stimulus -->
         <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 mb-4">
           <div class="text-xs font-heading font-bold text-sky-700 mb-1">📖 Bacalah Stimulus Berikut:</div>
           <p id="quiz-stimulus" class="text-slate-800 text-base"></p>
         </div>
 
-        <!-- Pertanyaan -->
         <p id="quiz-question" class="font-heading font-bold text-lg text-slate-900 mb-4"></p>
-
-        <!-- Pilihan A, B, C -->
         <div id="quiz-options" class="space-y-3 mb-4"></div>
 
-        <!-- Kotak Feedback Jawaban Benar & Penjelasan -->
         <div id="quiz-feedback" class="hidden rounded-2xl p-4 mb-4 border-2">
           <div id="quiz-feedback-status" class="font-heading font-extrabold text-base mb-1"></div>
           <p id="quiz-feedback-answer" class="font-bold text-sm mb-1"></p>
@@ -214,7 +224,7 @@
     <section id="tab-kisikisi" class="tab-content hidden">
       <div class="card-kid p-5 md:p-6">
         <h3 class="text-xl md:text-2xl font-extrabold text-indigo-700 mb-1">📋 Kisi-Kisi Pembelajaran TIK Kelas 4</h3>
-        <p class="text-slate-600 text-sm mb-4">Panduan tujuan pembelajaran dan materi yang akan diujikan.</p>
+        <p class="text-slate-600 text-sm mb-4">Panduan tujuan pembelajaran dan materi ujian.</p>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -231,15 +241,15 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 4: KUMPUL TUGAS KE GOOGLE DRIVE ==================== -->
+    <!-- ==================== TAB 4: KUMPUL TUGAS GOOGLE DRIVE ==================== -->
     <section id="tab-tugas" class="tab-content hidden">
       <div class="card-kid max-w-2xl mx-auto p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
         <h3 class="text-xl md:text-2xl font-extrabold text-amber-700 mb-1">📤 Kumpul Tugas Digital</h3>
-        <p class="text-slate-600 text-sm mb-5">Unggah hasil karyamu dalam format <b>.doc, .docx, atau .pdf</b>. File akan langsung masuk ke Google Drive Bapak/Ibu Guru tanpa perlu login Google!</p>
+        <p class="text-slate-600 text-sm mb-5">Unggah hasil tugasmu (.doc, .docx, .pdf) langsung ke Google Drive guru tanpa perlu login Google!</p>
 
         <div class="space-y-4">
           <div>
-            <label class="font-heading font-bold text-sm">Bab / Judul Tugas</label>
+            <label class="font-heading font-bold text-sm">Pilih Bab Tugas</label>
             <select id="tugas-bab" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 bg-white">
               <option value="Bab 1 - Manajemen File & Folder">Bab 1 - Manajemen File & Folder</option>
               <option value="Bab 2 - Dokumen Rapi Word">Bab 2 - Dokumen Rapi Word</option>
@@ -251,8 +261,8 @@
           </div>
 
           <div>
-            <label class="font-heading font-bold text-sm">Pilih File Tugas (.doc, .docx, .pdf)</label>
-            <input id="tugas-file" type="file" accept=".doc,.docx,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+            <label class="font-heading font-bold text-sm">Pilih File (.doc, .docx, .pdf)</label>
+            <input id="tugas-file" type="file" accept=".doc,.docx,.pdf"
               class="w-full mt-1 p-3 rounded-2xl border-2 border-dashed border-sky-400 bg-sky-50 text-sm" />
           </div>
 
@@ -265,24 +275,35 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 5: TOKO AVATAR BERUANG ==================== -->
+    <!-- ==================== TAB 5: TOKO KOSTUM 3D ==================== -->
     <section id="tab-toko" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Kamar Pas Beruang -->
+        <!-- Preview Karakter 3D -->
         <div class="card-kid p-6 text-center border-pink-300 shadow-[0_8px_0_#F9A8D4]">
-          <h3 class="text-xl font-extrabold text-pink-600 mb-1">🧸 Kamar Pas Beruang</h3>
-          <p class="text-xs text-slate-500 mb-3">Tampilan beruangmu otomatis tampil di papan peringkat!</p>
-          <div id="shop-bear-preview" class="w-52 h-64 mx-auto bg-gradient-to-b from-sky-100 to-emerald-100 rounded-3xl border-2 border-pink-200 flex items-center justify-center p-3 mb-3"></div>
+          <h3 class="text-xl font-extrabold text-pink-600 mb-1">🧸 Kamar Pas Beruang 3D</h3>
+          <p class="text-xs text-slate-500 mb-3">Karakter 3D bergerak otomatis dan tampil di leaderboard!</p>
+          <div id="shop-bear-preview" class="w-52 h-64 mx-auto bg-gradient-to-b from-sky-100 to-emerald-100 rounded-3xl border-2 border-pink-200 flex items-center justify-center p-3 mb-3 avatar-3d-container"></div>
           <div class="bg-amber-100 text-amber-800 font-heading font-bold py-2 px-4 rounded-2xl inline-block">
             Saldo Poinmu: ⭐ <span id="shop-poin-display">0</span>
           </div>
         </div>
 
-        <!-- Katalog Item (Kepala, Mata, Baju, Celana, Sepatu) -->
+        <!-- Katalog Item Lengkap -->
         <div class="lg:col-span-2 card-kid p-6">
-          <h3 class="text-xl font-extrabold text-slate-800 mb-1">🛍️ Toko Kostum Beruang</h3>
-          <p class="text-sm text-slate-600 mb-4">Kumpulkan poin dari kuis untuk membeli ekspresi mata, baju, celana, dan sepatu keren!</p>
-          <div id="shop-items-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="text-xl font-extrabold text-slate-800">🛍️ Toko Kostum & Aksesoris</h3>
+            <div id="shop-category-tabs" class="flex flex-wrap gap-1">
+              <button onclick="filterShop('all')" class="shop-cat-btn bg-sky-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl">Semua</button>
+              <button onclick="filterShop('eyes')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Mata</button>
+              <button onclick="filterShop('mouth')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Mulut</button>
+              <button onclick="filterShop('shirt')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Baju</button>
+              <button onclick="filterShop('pants')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Celana</button>
+              <button onclick="filterShop('hat')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Topi</button>
+              <button onclick="filterShop('acc')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Aksesoris</button>
+            </div>
+          </div>
+          <p class="text-sm text-slate-600 mb-4">Gunakan poin kuis untuk mempercantik mata, mulut, baju, celana, topi, dan aksesoris beruangmu!</p>
+          <div id="shop-items-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[450px] overflow-y-auto pr-1"></div>
         </div>
       </div>
     </section>
@@ -291,68 +312,148 @@
     <section id="tab-leaderboard" class="tab-content hidden">
       <div class="card-kid p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
         <h3 class="text-xl md:text-2xl font-extrabold text-amber-600 mb-1">🏆 Papan Peringkat Petualang TIK</h3>
-        <p class="text-slate-600 text-sm mb-4">Diperbarui otomatis berdasarkan total poin kuis tertinggi.</p>
+        <p class="text-slate-600 text-sm mb-4">Diperbarui secara real-time berdasarkan perolehan poin siswa.</p>
         <div id="leaderboard-list" class="space-y-3"></div>
       </div>
     </section>
 
   </div>
 
+  <!-- ==================== MODAL BACA MATERI ==================== -->
+  <div id="materi-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white max-w-3xl w-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden border-4 border-sky-300">
+      <div class="bg-sky-500 text-white p-4 flex items-center justify-between">
+        <div>
+          <span id="modal-bab-badge" class="bg-sky-700 text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">Bab 1</span>
+          <h3 id="modal-title" class="text-lg md:text-xl font-extrabold mt-1">Judul Materi</h3>
+        </div>
+        <button onclick="closeMateriModal()" class="w-10 h-10 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold flex items-center justify-center text-lg">✕</button>
+      </div>
+      <div class="p-5 md:p-6 overflow-y-auto space-y-4 flex-1">
+        <div class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl">
+          <h4 class="font-heading font-bold text-indigo-900 text-sm mb-1">🎯 Tujuan Pembelajaran (Capaian Pembelajaran):</h4>
+          <p id="modal-cp" class="text-xs md:text-sm text-indigo-800"></p>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-slate-800 text-sm mb-1">📖 Ringkasan Materi:</h4>
+          <p id="modal-ringkasan" class="text-sm md:text-base text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border-2 border-slate-200"></p>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-slate-800 text-sm mb-2">📄 Dokumen Modul PDF dari Guru:</h4>
+          <div id="modal-pdf-list" class="space-y-2"></div>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button onclick="closeMateriModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-5 py-2.5 rounded-xl text-sm">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // ==================== KATALOG ITEM AVATAR BERUANG ====================
+    // ==================== KATALOG KOSTUM 3D LENGKAP ====================
     const BEAR_CATALOG = [
-      // Jenis Kepala / Bulu
+      // Kepala / Jenis Bulu
       { id: "head_brown", part: "head", name: "Kepala Beruang Madu", price: 0, color: "#92400E", muzzle: "#FDE68A" },
       { id: "head_panda", part: "head", name: "Kepala Panda", price: 0, color: "#FFFFFF", muzzle: "#E2E8F0", isPanda: true },
       { id: "head_polar", part: "head", name: "Kepala Beruang Kutub", price: 0, color: "#F8FAFC", muzzle: "#CBD5E1" },
-      // Mata
+      
+      // Mata (Bisa dibeli)
       { id: "eyes_happy", part: "eyes", name: "Mata Ceria", price: 0 },
       { id: "eyes_star", part: "eyes", name: "Mata Bintang", price: 30 },
       { id: "eyes_glasses", part: "eyes", name: "Kacamata Pintar", price: 50 },
-      // Baju
+      { id: "eyes_wink", part: "eyes", name: "Mata Mengedip", price: 40 },
+
+      // Mulut (Bisa dibeli)
+      { id: "mouth_smile", part: "mouth", name: "Senyum Manis", price: 0 },
+      { id: "mouth_laugh", part: "mouth", name: "Tertawa Lebar", price: 35 },
+      { id: "mouth_cool", part: "mouth", name: "Senyum Keren", price: 60 },
+
+      // Baju (Bisa dibeli)
       { id: "shirt_tee", part: "shirt", name: "Kaus Biru Polos", price: 0, color: "#38BDF8" },
       { id: "shirt_hoodie", part: "shirt", name: "Hoodie Oranye", price: 40, color: "#FB923C" },
       { id: "shirt_astro", part: "shirt", name: "Baju Astronot", price: 80, color: "#6366F1" },
-      // Celana
+      { id: "shirt_super", part: "shirt", name: "Kostum Pahlawan", price: 100, color: "#EF4444" },
+
+      // Celana (Bisa dibeli)
       { id: "pants_shorts", part: "pants", name: "Celana Pendek Abu", price: 0, color: "#475569" },
       { id: "pants_jeans", part: "pants", name: "Celana Jeans Biru", price: 35, color: "#1D4ED8" },
       { id: "pants_gold", part: "pants", name: "Celana Juara Emas", price: 70, color: "#EAB308" },
-      // Sepatu
-      { id: "shoes_basic", part: "shoes", name: "Sepatu Kets Putih", price: 0, color: "#F1F5F9" },
-      { id: "shoes_red", part: "shoes", name: "Sepatu Roket Merah", price: 45, color: "#EF4444" },
-      { id: "shoes_boots", part: "shoes", name: "Sepatu Bot Hijau", price: 65, color: "#10B981" }
+
+      // Topi (Bisa dibeli)
+      { id: "hat_none", part: "hat", name: "Tanpa Topi", price: 0 },
+      { id: "hat_cap", part: "hat", name: "Topi Baseball Merah", price: 45, color: "#EF4444" },
+      { id: "hat_wizard", part: "hat", name: "Topi Penyihir Sihir", price: 90, color: "#7C3AED" },
+      { id: "hat_crown", part: "hat", name: "Mahkota Raja Emas", price: 150, color: "#F59E0B" },
+
+      // Aksesoris (Bisa dibeli)
+      { id: "acc_none", part: "acc", name: "Tanpa Aksesoris", price: 0 },
+      { id: "acc_bowtie", part: "acc", name: "Dasi Kupu-Kupu", price: 50, color: "#EC4899" },
+      { id: "acc_scarf", part: "acc", name: "Syal Hangat Pelangi", price: 75, color: "#10B981" }
     ];
 
-    // Generator SVG Beruang Modular (Kepala, Mata, Baju, Celana, Sepatu)
+    // Generator SVG 3D Karakter Beruang Bergerak
     function renderBearSVG(equipped) {
       const head = BEAR_CATALOG.find(i => i.id === equipped.head) || BEAR_CATALOG[0];
-      const shirt = BEAR_CATALOG.find(i => i.id === equipped.shirt) || BEAR_CATALOG[6];
-      const pants = BEAR_CATALOG.find(i => i.id === equipped.pants) || BEAR_CATALOG[9];
-      const shoes = BEAR_CATALOG.find(i => i.id === equipped.shoes) || BEAR_CATALOG[12];
+      const shirt = BEAR_CATALOG.find(i => i.id === equipped.shirt) || BEAR_CATALOG[9];
+      const pants = BEAR_CATALOG.find(i => i.id === equipped.pants) || BEAR_CATALOG[13];
+      const hat = BEAR_CATALOG.find(i => i.id === equipped.hat) || { id: "hat_none" };
+      const acc = BEAR_CATALOG.find(i => i.id === equipped.acc) || { id: "acc_none" };
+      
       const earInner = head.isPanda ? "#1E293B" : head.muzzle;
       const earOuter = head.isPanda ? "#1E293B" : head.color;
 
+      // Render Mata 3D Dinamis
       let eyesSVG = `
-        <circle cx="82" cy="68" r="5" fill="#1E293B"/>
-        <circle cx="118" cy="68" r="5" fill="#1E293B"/>
-        <circle cx="84" cy="66" r="1.8" fill="#FFF"/>
-        <circle cx="120" cy="66" r="1.8" fill="#FFF"/>
+        <g class="avatar-eyes">
+          <circle cx="82" cy="68" r="5" fill="#1E293B"/>
+          <circle cx="118" cy="68" r="5" fill="#1E293B"/>
+          <circle cx="84" cy="66" r="1.8" fill="#FFF"/>
+          <circle cx="120" cy="66" r="1.8" fill="#FFF"/>
+        </g>
       `;
       if (equipped.eyes === "eyes_star") {
-        eyesSVG = `
-          <text x="73" y="75" font-size="18">⭐</text>
-          <text x="109" y="75" font-size="18">⭐</text>
-        `;
+        eyesSVG = `<text x="72" y="75" font-size="18">⭐</text><text x="108" y="75" font-size="18">⭐</text>`;
       } else if (equipped.eyes === "eyes_glasses") {
         eyesSVG += `
           <rect x="68" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
           <rect x="106" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
           <line x1="94" y1="67" x2="106" y2="67" stroke="#0F172A" stroke-width="3"/>
         `;
+      } else if (equipped.eyes === "eyes_wink") {
+        eyesSVG = `
+          <circle cx="82" cy="68" r="5" fill="#1E293B"/>
+          <path d="M112 68 Q118 73 124 68" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
+        `;
+      }
+
+      // Render Mulut 3D Dinamis
+      let mouthSVG = `<path d="M93 88 Q100 95 107 88" fill="none" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round"/>`;
+      if (equipped.mouth === "mouth_laugh") {
+        mouthSVG = `<path d="M90 86 Q100 102 110 86" fill="#1E293B" stroke="#1E293B" stroke-width="2"/>`;
+      } else if (equipped.mouth === "mouth_cool") {
+        mouthSVG = `<path d="M92 89 L108 89" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="94" r="3" fill="#EF4444"/>`;
+      }
+
+      // Render Topi 3D
+      let hatSVG = "";
+      if (hat.id === "hat_cap") {
+        hatSVG = `<path d="M68 35 Q100 15 132 35 L145 35 L145 42 L55 42 L55 35 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M125 38 L155 40 L155 44 L125 42 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2"/>`;
+      } else if (hat.id === "hat_wizard") {
+        hatSVG = `<polygon points="100,5 65,45 135,45" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><ellipse cx="100" cy="45" rx="38" ry="8" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
+      } else if (hat.id === "hat_crown") {
+        hatSVG = `<polygon points="72,42 78,22 88,35 100,18 112,35 122,22 128,42" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
+      }
+
+      // Render Aksesoris 3D
+      let accSVG = "";
+      if (acc.id === "acc_bowtie") {
+        accSVG = `<polygon points="100,105 85,96 85,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><polygon points="100,105 115,96 115,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><circle cx="100" cy="105" r="5" fill="#1E293B"/>`;
+      } else if (acc.id === "acc_scarf") {
+        accSVG = `<path d="M72 100 Q100 112 128 100 L124 118 Q100 126 76 118 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M112 114 L120 142 L105 145 L100 116 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/>`;
       }
 
       return `
-        <svg viewBox="0 0 200 240" class="w-full h-full">
+        <svg viewBox="0 0 200 240" class="w-full h-full drop-shadow-md">
           <!-- Telinga -->
           <circle cx="62" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/>
           <circle cx="62" cy="36" r="9" fill="${earInner}"/>
@@ -368,34 +469,41 @@
           <rect x="104" y="162" width="32" height="44" rx="8" fill="${pants.color}" stroke="#334155" stroke-width="3"/>
 
           <!-- Sepatu -->
-          <rect x="58" y="202" width="40" height="20" rx="10" fill="${shoes.color}" stroke="#334155" stroke-width="3"/>
-          <rect x="102" y="202" width="40" height="20" rx="10" fill="${shoes.color}" stroke="#334155" stroke-width="3"/>
+          <rect x="58" y="202" width="40" height="20" rx="10" fill="#F1F5F9" stroke="#334155" stroke-width="3"/>
+          <rect x="102" y="202" width="40" height="20" rx="10" fill="#F1F5F9" stroke="#334155" stroke-width="3"/>
 
           <!-- Baju -->
           <rect x="56" y="106" width="88" height="64" rx="18" fill="${shirt.color}" stroke="#334155" stroke-width="3"/>
           <circle cx="100" cy="136" r="10" fill="#FFFFFF" opacity="0.4"/>
 
-          <!-- Kepala -->
-          <ellipse cx="100" cy="70" rx="46" ry="40" fill="${head.color}" stroke="#334155" stroke-width="3"/>
-          ${head.isPanda ? '<ellipse cx="82" cy="68" rx="11" ry="9" fill="#334155"/><ellipse cx="118" cy="68" rx="11" ry="9" fill="#334155"/>' : ''}
-          <!-- Moncong -->
-          <ellipse cx="100" cy="84" rx="18" ry="13" fill="${head.muzzle}"/>
-          <ellipse cx="100" cy="79" rx="7" ry="5" fill="#1E293B"/>
-          <path d="M93 88 Q100 95 107 88" fill="none" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- Mata -->
-          ${eyesSVG}
+          <!-- Aksesoris Dada -->
+          ${accSVG}
+
+          <!-- Kepala (Bergeser sedikit untuk efek 3D hidup) -->
+          <g>
+            <ellipse cx="100" cy="70" rx="46" ry="40" fill="${head.color}" stroke="#334155" stroke-width="3"/>
+            ${head.isPanda ? '<ellipse cx="82" cy="68" rx="11" ry="9" fill="#334155"/><ellipse cx="118" cy="68" rx="11" ry="9" fill="#334155"/>' : ''}
+            <!-- Moncong -->
+            <ellipse cx="100" cy="84" rx="18" ry="13" fill="${head.muzzle}"/>
+            <ellipse cx="100" cy="79" rx="7" ry="5" fill="#1E293B"/>
+            ${mouthSVG}
+            ${eyesSVG}
+          </g>
+
+          <!-- Topi -->
+          ${hatSVG}
         </svg>
       `;
     }
 
-    // ==================== STATE SISWA (SESSION STORAGE: HILANG SAAT TAB DITUTUP, AMAN SAAT REFRESH) ====================
+    // ==================== STATE APLIKASI ====================
     let starterHead = "head_brown";
     let studentState = null;
-    let materiData = [...DEFAULT_BAB];
-    let kisiData = [...DEFAULT_KISIKISI];
-    let quizBank = {}; // Diisi dari Firestore atau fallback
+    let materiData = [];
+    let kisiData = [];
+    let quizBank = {};
+    let currentShopFilter = "all";
 
-    // State Kuis Aktif (Tersimpan agar tidak hilang jika tidak sengaja pindah menu)
     let activeQuiz = {
       babId: null,
       questions: [],
@@ -417,7 +525,7 @@
 
     function updateLoginPreview() {
       document.getElementById("login-bear-preview").innerHTML = renderBearSVG({
-        head: starterHead, eyes: "eyes_happy", shirt: "shirt_tee", pants: "pants_shorts", shoes: "shoes_basic"
+        head: starterHead, eyes: "eyes_happy", mouth: "mouth_smile", shirt: "shirt_tee", pants: "pants_shorts", hat: "hat_none", acc: "acc_none"
       });
     }
 
@@ -438,14 +546,13 @@
           nama,
           kelas,
           points: 0,
-          ownedItems: [starterHead, "eyes_happy", "shirt_tee", "pants_shorts", "shoes_basic"],
-          equipped: { head: starterHead, eyes: "eyes_happy", shirt: "shirt_tee", pants: "pants_shorts", shoes: "shoes_basic" },
+          ownedItems: [starterHead, "eyes_happy", "mouth_smile", "shirt_tee", "pants_shorts", "hat_none", "acc_none"],
+          equipped: { head: starterHead, eyes: "eyes_happy", mouth: "mouth_smile", shirt: "shirt_tee", pants: "pants_shorts", hat: "hat_none", acc: "acc_none" },
           updatedAt: Date.now()
         };
         await ref.set(studentState);
       }
 
-      // Simpan di sessionStorage (aman saat F5/refresh, otomatis terhapus saat tab ditutup)
       sessionStorage.setItem("tik_student_session", JSON.stringify(studentState));
       initApp();
     }
@@ -464,7 +571,6 @@
       refreshStudentUI();
       listenRealtimeData();
 
-      // Pulihkan kuis jika sebelumnya sempat ter-refresh di tengah kuis
       const savedQuiz = sessionStorage.getItem("tik_active_quiz");
       if (savedQuiz) {
         activeQuiz = JSON.parse(savedQuiz);
@@ -492,10 +598,8 @@
       document.querySelectorAll(".nav-btn").forEach(btn => {
         btn.className = "nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy relative";
       });
-      const activeBtn = document.getElementById("nav-" + tabName);
-      activeBtn.className = "nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy relative";
+      document.getElementById("nav-" + tabName).className = "nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy relative";
 
-      // Jika kembali ke tab Kuis dan ada kuis menggantung, langsung lanjutkan!
       if (tabName === "kuis" && activeQuiz.babId) {
         document.getElementById("quiz-selector").classList.add("hidden");
         document.getElementById("quiz-runner").classList.remove("hidden");
@@ -503,26 +607,19 @@
       }
     }
 
-    // ==================== SINKRONISASI REAL-TIME FIRESTORE ====================
+    // ==================== FIRESTORE LISTENERS ====================
     function listenRealtimeData() {
-      // 1. Materi & PDF dari Admin
       db.collection("materi").orderBy("nomor").onSnapshot(snap => {
-        if (!snap.empty) {
-          materiData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        }
+        materiData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderMateri();
         renderQuizBabSelector();
       });
 
-      // 2. Kisi-Kisi dari Admin
       db.collection("kisikisi").orderBy("no").onSnapshot(snap => {
-        if (!snap.empty) {
-          kisiData = snap.docs.map(d => d.data());
-        }
+        kisiData = snap.docs.map(d => d.data());
         renderKisiKisi();
       });
 
-      // 3. Bank Soal dari Admin
       db.collection("soal").onSnapshot(snap => {
         quizBank = {};
         snap.forEach(doc => {
@@ -533,7 +630,6 @@
         renderQuizBabSelector();
       });
 
-      // 4. Leaderboard Real-Time
       db.collection("students").orderBy("points", "desc").limit(20).onSnapshot(snap => {
         const list = document.getElementById("leaderboard-list");
         list.innerHTML = "";
@@ -546,7 +642,7 @@
             <div class="flex items-center justify-between p-3 rounded-2xl border-2 ${isMe}">
               <div class="flex items-center gap-3">
                 <span class="font-heading font-extrabold text-lg w-8 text-center">${medal}</span>
-                <div class="w-12 h-14 bg-sky-50 rounded-xl p-1">${renderBearSVG(s.equipped)}</div>
+                <div class="w-12 h-14 bg-sky-50 rounded-xl p-1 avatar-3d-container">${renderBearSVG(s.equipped)}</div>
                 <div>
                   <div class="font-heading font-bold text-slate-800">${s.nama}</div>
                   <div class="text-xs text-slate-500">Kelas ${s.kelas}</div>
@@ -562,51 +658,58 @@
       });
     }
 
+    // ==================== RENDER MATERI & MODAL ====================
     function renderMateri() {
       const grid = document.getElementById("materi-grid");
       const colors = ["border-sky-300", "border-emerald-300", "border-amber-300", "border-purple-300", "border-pink-300", "border-indigo-300"];
-      grid.innerHTML = materiData.map((bab, idx) => {
-        const pdfButtons = (bab.pdfs && bab.pdfs.length > 0)
-          ? bab.pdfs.map((p, i) => `
-              <a href="${p.downloadUrl || p.viewUrl}" target="_blank"
-                class="flex items-center justify-between bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-heading font-bold text-xs px-3 py-2 rounded-xl mt-2">
-                <span>📄 ${p.title || 'Modul PDF ' + (i + 1)}</span>
-                <span>⬇️ Unduh</span>
-              </a>
-            `).join("")
-          : `<div class="text-xs text-slate-400 italic mt-2">Belum ada file PDF diunggah guru.</div>`;
-
-        return `
-          <div class="card-kid p-5 flex flex-col justify-between ${colors[idx % colors.length]}">
-            <div>
-              <span class="inline-block bg-sky-100 text-sky-800 font-heading font-bold text-xs px-3 py-1 rounded-full mb-2">
-                Bab ${bab.nomor}
-              </span>
-              <h4 class="text-lg font-extrabold text-slate-800 mb-2">${bab.judul}</h4>
-              <p class="text-xs text-indigo-700 bg-indigo-50 p-2.5 rounded-xl mb-3"><b>Tujuan:</b> ${bab.cp}</p>
-              <p class="text-sm text-slate-700 mb-4">${bab.ringkasan}</p>
-            </div>
-            <div class="pt-3 border-t border-slate-100">
-              <div class="font-heading font-bold text-xs text-slate-600">Bahan Bacaan PDF:</div>
-              ${pdfButtons}
-            </div>
+      grid.innerHTML = materiData.map((bab, idx) => `
+        <div class="card-kid p-5 flex flex-col justify-between ${colors[idx % colors.length]}">
+          <div>
+            <span class="inline-block bg-sky-100 text-sky-800 font-heading font-bold text-xs px-3 py-1 rounded-full mb-2">Bab ${bab.nomor}</span>
+            <h4 class="text-lg font-extrabold text-slate-800 mb-2">${bab.judul}</h4>
+            <p class="text-xs text-indigo-700 bg-indigo-50 p-2.5 rounded-xl mb-3 line-clamp-2"><b>Tujuan:</b> ${bab.cp}</p>
+            <p class="text-sm text-slate-700 mb-4 line-clamp-3">${bab.ringkasan}</p>
           </div>
-        `;
-      }).join("");
-    }
-
-    function renderKisiKisi() {
-      document.getElementById("kisikisi-tbody").innerHTML = kisiData.map(row => `
-        <tr class="hover:bg-indigo-50/50">
-          <td class="p-3 font-bold">${row.no}</td>
-          <td class="p-3">${row.tujuan}</td>
-          <td class="p-3 font-semibold text-indigo-800">${row.materi}</td>
-          <td class="p-3"><span class="bg-amber-100 text-amber-800 font-heading font-bold text-xs px-2.5 py-1 rounded-lg">${row.elemen}</span></td>
-        </tr>
+          <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+            <button onclick="openMateriModal('${bab.id}')" class="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-[0_3px_0_#0284C7] btn-bouncy flex items-center justify-center gap-1">
+              📖 Baca Materi
+            </button>
+            <span class="text-xs font-heading font-bold text-slate-500 bg-slate-100 px-2.5 py-2 rounded-xl">📄 ${bab.pdfs ? bab.pdfs.length : 0} PDF</span>
+          </div>
+        </div>
       `).join("");
     }
 
-    // ==================== LOGIKA KUIS (15 SOAL/BAB, STIMULUS, A-C, SIMPAN STATE) ====================
+    function openMateriModal(babId) {
+      const bab = materiData.find(b => b.id === babId);
+      if (!bab) return;
+      document.getElementById("modal-bab-badge").textContent = "Bab " + bab.nomor;
+      document.getElementById("modal-title").textContent = bab.judul;
+      document.getElementById("modal-cp").textContent = bab.cp;
+      document.getElementById("modal-ringkasan").textContent = bab.ringkasan;
+
+      const pdfListEl = document.getElementById("modal-pdf-list");
+      if (bab.pdfs && bab.pdfs.length > 0) {
+        pdfListEl.innerHTML = bab.pdfs.map((p, i) => `
+          <div class="flex items-center justify-between bg-sky-50 border-2 border-sky-200 p-3 rounded-2xl">
+            <span class="font-heading font-bold text-xs text-slate-800">📄 ${p.title || 'Modul PDF ' + (i + 1)}</span>
+            <div class="flex gap-2">
+              <a href="${p.viewUrl}" target="_blank" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl">👁️ Buka</a>
+              <a href="${p.downloadUrl || p.viewUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl">⬇️ Unduh</a>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        pdfListEl.innerHTML = `<p class="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl">Belum ada file PDF diunggah guru.</p>`;
+      }
+      document.getElementById("materi-modal").classList.remove("hidden");
+    }
+
+    function closeMateriModal() {
+      document.getElementById("materi-modal").classList.add("hidden");
+    }
+
+    // ==================== KUIS & KISI-KISI ====================
     function renderQuizBabSelector() {
       const container = document.getElementById("quiz-bab-list");
       container.innerHTML = materiData.map(bab => {
@@ -630,15 +733,14 @@
     function startQuiz(babId, title) {
       let questions = quizBank[babId] || [];
       if (questions.length === 0) {
-        // Soal contoh otomatis jika guru belum mengisi soal di bab tersebut
         questions = [{
-          stimulus: `Perhatikan materi ${title}. Setiap langkah kerja di komputer harus dilakukan secara berurutan dan rapi.`,
-          pertanyaan: "Apa manfaat utama merapikan file ke dalam folder di komputer?",
-          opsiA: "Membuat layar komputer menjadi lebih terang",
-          opsiB: "Memudahkan kita mencari kembali file tugas dengan cepat",
-          opsiC: "Menghapus semua file lama secara otomatis",
+          stimulus: `Perhatikan materi ${title}. Pengelolaan komputer dan file harus dilakukan secara runtut.`,
+          pertanyaan: "Apa manfaat utama mengelompokkan file ke dalam folder?",
+          opsiA: "Membuat komputer cepat rusak",
+          opsiB: "Memudahkan pencarian file dengan cepat",
+          opsiC: "Menghapus tugas lama secara otomatis",
           kunci: "B",
-          penjelasan: "Folder berfungsi seperti map atau laci penyimpanan agar file terkelompok rapi dan mudah ditemukan kembali."
+          penjelasan: "Folder berfungsi seperti map laci agar file tersusun rapi dan mudah ditemukan."
         }];
       }
 
@@ -674,12 +776,7 @@
       document.getElementById("quiz-feedback").classList.add("hidden");
       document.getElementById("quiz-next-btn").classList.add("hidden");
 
-      const opts = [
-        { key: "A", text: q.opsiA },
-        { key: "B", text: q.opsiB },
-        { key: "C", text: q.opsiC }
-      ];
-
+      const opts = [{ key: "A", text: q.opsiA }, { key: "B", text: q.opsiB }, { key: "C", text: q.opsiC }];
       document.getElementById("quiz-options").innerHTML = opts.map(o => `
         <button onclick="submitAnswer('${o.key}')" id="opt-btn-${o.key}"
           class="w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 bg-white font-semibold flex items-center gap-3 transition">
@@ -699,11 +796,8 @@
       ["A", "B", "C"].forEach(k => {
         const btn = document.getElementById("opt-btn-" + k);
         btn.disabled = true;
-        if (k === q.kunci) {
-          btn.classList.add("border-emerald-500", "bg-emerald-50");
-        } else if (k === chosenKey && !isCorrect) {
-          btn.classList.add("border-rose-500", "bg-rose-50");
-        }
+        if (k === q.kunci) btn.classList.add("border-emerald-500", "bg-emerald-50");
+        else if (k === chosenKey && !isCorrect) btn.classList.add("border-rose-500", "bg-rose-50");
       });
 
       const fb = document.getElementById("quiz-feedback");
@@ -713,14 +807,14 @@
         activeQuiz.sessionScore += 10;
         studentState.points += 10;
         fb.className = "rounded-2xl p-4 mb-4 border-2 border-emerald-400 bg-emerald-50 text-emerald-900";
-        document.getElementById("quiz-feedback-status").textContent = "🎉 Hebat! Jawabanmu Benar (+10 Poin)";
+        document.getElementById("quiz-feedback-status").textContent = "🎉 Hebat! Jawaban Benar (+10 Poin)";
         await saveStudentProgress();
       } else {
         fb.className = "rounded-2xl p-4 mb-4 border-2 border-amber-400 bg-amber-50 text-amber-950";
         document.getElementById("quiz-feedback-status").textContent = "💡 Hampir Tepat! Yuk Pelajari Jawabannya:";
       }
 
-      document.getElementById("quiz-feedback-answer").textContent = `Jawaban yang benar adalah: ${q.kunci}`;
+      document.getElementById("quiz-feedback-answer").textContent = `Jawaban Benar: ${q.kunci}`;
       document.getElementById("quiz-feedback-explanation").textContent = `Penjelasan: ${q.penjelasan}`;
       document.getElementById("quiz-session-score").textContent = activeQuiz.sessionScore;
       document.getElementById("quiz-next-btn").classList.remove("hidden");
@@ -734,7 +828,7 @@
         sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
         renderCurrentQuestion();
       } else {
-        alert(`Selamat ${studentState.nama}! Kamu menyelesaikan kuis dengan skor sesi ${activeQuiz.sessionScore} poin!`);
+        alert(`Selamat ${studentState.nama}! Kuis selesai dengan skor sesi ${activeQuiz.sessionScore} poin!`);
         activeQuiz = { babId: null, questions: [], currentIndex: 0, sessionScore: 0, answeredCurrent: false };
         sessionStorage.removeItem("tik_active_quiz");
         document.getElementById("quiz-active-badge").classList.add("hidden");
@@ -742,12 +836,34 @@
       }
     }
 
-    // ==================== TOKO KOSTUM BERUANG ====================
+    function renderKisiKisi() {
+      document.getElementById("kisikisi-tbody").innerHTML = kisiData.map(row => `
+        <tr class="hover:bg-indigo-50/50">
+          <td class="p-3 font-bold">${row.no}</td>
+          <td class="p-3">${row.tujuan}</td>
+          <td class="p-3 font-semibold text-indigo-800">${row.materi}</td>
+          <td class="p-3"><span class="bg-amber-100 text-amber-800 font-heading font-bold text-xs px-2.5 py-1 rounded-lg">${row.elemen}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    // ==================== TOKO KOSTUM 3D ====================
+    function filterShop(cat) {
+      currentShopFilter = cat;
+      document.querySelectorAll(".shop-cat-btn").forEach(btn => {
+        btn.className = "shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl";
+      });
+      event.target.className = "shop-cat-btn bg-sky-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl";
+      renderShop();
+    }
+
     function renderShop() {
       const grid = document.getElementById("shop-items-grid");
-      const partLabel = { head: "Kepala", eyes: "Mata", shirt: "Baju", pants: "Celana", shoes: "Sepatu" };
+      const partLabel = { head: "Kepala", eyes: "Mata", mouth: "Mulut", shirt: "Baju", pants: "Celana", hat: "Topi", acc: "Aksesoris" };
 
-      grid.innerHTML = BEAR_CATALOG.map(item => {
+      const filtered = currentShopFilter === "all" ? BEAR_CATALOG : BEAR_CATALOG.filter(i => i.part === currentShopFilter);
+
+      grid.innerHTML = filtered.map(item => {
         const owned = studentState.ownedItems.includes(item.id);
         const equipped = studentState.equipped[item.part] === item.id;
 
@@ -774,9 +890,7 @@
 
     async function buyItem(itemId) {
       const item = BEAR_CATALOG.find(i => i.id === itemId);
-      if (studentState.points < item.price) {
-        return alert("Poinmu belum cukup! Yuk kerjakan kuis lagi untuk mengumpulkan poin.");
-      }
+      if (studentState.points < item.price) return alert("Poin kuis belum cukup! Yuk kerjakan kuis lagi.");
       studentState.points -= item.price;
       studentState.ownedItems.push(item.id);
       studentState.equipped[item.part] = item.id;
@@ -795,14 +909,14 @@
       await db.collection("students").doc(studentState.id).set(studentState, { merge: true });
     }
 
-    // ==================== UNGGAH TUGAS KE GOOGLE DRIVE ====================
+    // ==================== UNGGAH TUGAS GOOGLE DRIVE ====================
     function uploadTugasSiswa() {
       const fileInput = document.getElementById("tugas-file");
       const bab = document.getElementById("tugas-bab").value;
       const statusEl = document.getElementById("tugas-status");
       const btn = document.getElementById("btn-kirim-tugas");
 
-      if (!fileInput.files.length) return alert("Pilih file tugas (.doc, .docx, atau .pdf) terlebih dahulu!");
+      if (!fileInput.files.length) return alert("Pilih file tugas (.doc, .docx, .pdf) terlebih dahulu!");
       const file = fileInput.files[0];
 
       btn.disabled = true;
@@ -817,17 +931,12 @@
         try {
           const res = await fetch(GAS_WEB_APP_URL, {
             method: "POST",
-            body: JSON.stringify({
-              type: "tugas",
-              fileName: cleanFileName,
-              mimeType: file.type || "application/octet-stream",
-              base64
-            })
+            body: JSON.stringify({ type: "tugas", fileName: cleanFileName, mimeType: file.type || "application/octet-stream", base64 })
           });
           const result = await res.json();
           if (result.status === "success") {
             statusEl.className = "text-center font-heading font-bold text-sm text-emerald-600";
-            statusEl.textContent = "✅ Berhasil! Tugasmu sudah tersimpan rapi di Google Drive Bapak/Ibu Guru.";
+            statusEl.textContent = "✅ Berhasil! Tugasmu tersimpan rapi di Google Drive Guru.";
             fileInput.value = "";
           } else {
             throw new Error(result.message);
@@ -842,7 +951,6 @@
       reader.readAsDataURL(file);
     }
 
-    // ==================== INISIALISASI SAAT HALAMAN DIBUKA ====================
     window.addEventListener("DOMContentLoaded", () => {
       updateLoginPreview();
       const savedSession = sessionStorage.getItem("tik_student_session");
