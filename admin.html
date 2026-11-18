@@ -11,30 +11,32 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="firebase-config.js"></script>
   <style>
-    body { font-family: 'Andika', sans-serif; line-height: 1.4; background-color: #F1F5F9; }
+    body { font-family: 'Andika', sans-serif; line-height: 1.5; background-color: #F8FAFC; }
     h1, h2, h3, h4, button { font-family: 'Poppins', sans-serif; }
+    .rich-editor-content { min-height: 120px; border: 2px solid #CBD5E1; border-radius: 0.75rem; padding: 0.75rem; background: white; outline: none; }
+    .rich-editor-content:focus { border-color: #4F46E5; }
   </style>
 </head>
-<body class="text-slate-800">
+<body class="text-slate-900">
 
-  <!-- ==================== LOGIN KHUSUS ADMIN/GURU ==================== -->
+  <!-- ==================== LOGIN ADMIN ==================== -->
   <div id="admin-login-box" class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-lg border border-slate-200">
-      <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">🔒 Area Terbatas Guru</span>
-      <h1 class="text-2xl font-extrabold text-slate-900 mt-2 mb-1">Portal Admin Pembelajaran</h1>
-      <p class="text-sm text-slate-500 mb-6">Masuk dengan akun Guru untuk mengelola materi PDF, bank soal, kisi-kisi, dan peringkat.</p>
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-xl border-2 border-slate-200">
+      <span class="bg-indigo-100 text-indigo-900 text-xs font-extrabold px-3 py-1 rounded-full">🔒 Area Khusus Guru / Admin</span>
+      <h1 class="text-2xl font-extrabold text-slate-900 mt-3 mb-1">Portal Admin TIK</h1>
+      <p class="text-sm text-slate-600 mb-6">Kelola materi format kaya, bank soal berstimulus & gambar, kisi-kisi, dan hapus akun siswa.</p>
 
       <div class="space-y-4">
         <div>
           <label class="text-xs font-bold text-slate-700">Email Guru</label>
-          <input id="admin-email" type="email" placeholder="guru@sekolah.sch.id" class="w-full mt-1 px-4 py-2.5 rounded-xl border border-slate-300" />
+          <input id="admin-email" type="email" placeholder="guru@sekolah.sch.id" class="w-full mt-1 px-4 py-3 rounded-xl border-2 border-slate-300" />
         </div>
         <div>
           <label class="text-xs font-bold text-slate-700">Kata Sandi</label>
-          <input id="admin-pass" type="password" placeholder="••••••••" class="w-full mt-1 px-4 py-2.5 rounded-xl border border-slate-300" />
+          <input id="admin-pass" type="password" placeholder="••••••••" class="w-full mt-1 px-4 py-3 rounded-xl border-2 border-slate-300" />
         </div>
-        <button onclick="adminLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl">
-          Masuk ke Dashboard Admin
+        <button onclick="adminLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md">
+          Masuk Dashboard Admin
         </button>
         <p id="admin-login-err" class="text-xs text-rose-600 font-bold text-center"></p>
       </div>
@@ -43,43 +45,43 @@
 
   <!-- ==================== DASHBOARD ADMIN ==================== -->
   <div id="admin-dashboard" class="hidden max-w-6xl mx-auto p-4 md:p-6">
-    <header class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-3 mb-6">
+    <header class="bg-white p-4 md:p-5 rounded-2xl shadow-sm border-2 border-slate-200 flex flex-wrap items-center justify-between gap-3 mb-6">
       <div>
-        <h1 class="text-xl font-extrabold text-indigo-700">🛠️ Dashboard Guru — TIK Kelas 4</h1>
-        <p class="text-xs text-slate-500">Perubahan langsung tersinkron ke perangkat siswa secara real-time.</p>
+        <h1 class="text-xl font-extrabold text-indigo-700">🛠️ Dashboard Guru TIK Kelas 4</h1>
+        <p class="text-xs text-slate-600">Sinkronisasi instan ke seluruh perangkat siswa.</p>
       </div>
       <div class="flex gap-2">
-        <button onclick="seedDefaultData()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl">
-          ⚡ Isi Data Awal Bab & Kisi-Kisi
+        <button onclick="seedDefaultData()" class="bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-extrabold px-3.5 py-2.5 rounded-xl shadow-sm">
+          ⚡ Isi Data Awal 6 Bab & Kisi-Kisi
         </button>
-        <button onclick="auth.signOut()" class="bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+        <button onclick="auth.signOut()" class="bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
           Keluar
         </button>
       </div>
     </header>
 
-    <!-- Menu Admin -->
+    <!-- Navigasi Menu Admin -->
     <div class="flex flex-wrap gap-2 mb-6">
-      <button onclick="showAdminTab('materi')" class="bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-xl">1. Materi & PDF (1-3/Bab)</button>
-      <button onclick="showAdminTab('soal')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">2. Bank Soal & Jawaban</button>
-      <button onclick="showAdminTab('kisikisi')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">3. Edit Kisi-Kisi</button>
-      <button onclick="showAdminTab('leaderboard')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">4. Pantau Leaderboard</button>
+      <button onclick="showAdminTab('materi')" class="admin-nav-btn bg-indigo-600 text-white text-sm font-bold px-4 py-2.5 rounded-xl">1. Materi & Upload PDF</button>
+      <button onclick="showAdminTab('soal')" class="admin-nav-btn bg-white text-slate-700 border-2 text-sm font-bold px-4 py-2.5 rounded-xl">2. Bank Soal & Gambar</button>
+      <button onclick="showAdminTab('kisikisi')" class="admin-nav-btn bg-white text-slate-700 border-2 text-sm font-bold px-4 py-2.5 rounded-xl">3. Edit Kisi-Kisi</button>
+      <button onclick="showAdminTab('siswa')" class="admin-nav-btn bg-white text-slate-700 border-2 text-sm font-bold px-4 py-2.5 rounded-xl">4. Kelola Akun Siswa</button>
     </div>
 
-    <!-- PANEL 1: EDIT MATERI & UPLOAD PDF (MAKSIMAL 3 PDF PER BAB) -->
+    <!-- PANEL 1: MATERI & FORMAT KAYA (TEBAL, MIRING, UNDERLINE, BULLET, SIMBOL) -->
     <section id="admin-tab-materi" class="admin-panel space-y-5">
-      <div id="admin-materi-list" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+      <div id="admin-materi-list" class="grid grid-cols-1 gap-6"></div>
     </section>
 
-    <!-- PANEL 2: KELOLA SOAL & JAWABAN -->
+    <!-- PANEL 2: KELOLA SOAL, JAWABAN, & GAMBAR -->
     <section id="admin-tab-soal" class="admin-panel hidden space-y-6">
-      <div class="bg-white p-6 rounded-2xl border border-slate-200">
-        <h2 class="text-lg font-extrabold mb-3" id="form-soal-title">➕ Tambah / Edit Soal Kuis</h2>
+      <div class="bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm">
+        <h2 class="text-lg font-extrabold mb-3" id="form-soal-title">➕ Tambah / Edit Soal Kuis (Dengan Gambar)</h2>
         <input type="hidden" id="edit-soal-id" />
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-xs font-bold">Pilih Bab</label>
-            <select id="soal-bab" class="w-full mt-1 p-2.5 border rounded-xl bg-white">
+            <select id="soal-bab" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl bg-white">
               <option value="bab1">Bab 1 - Komputer & Manajemen File/Folder</option>
               <option value="bab2">Bab 2 - Dokumen Rapi di Microsoft Word</option>
               <option value="bab3">Bab 3 - Memperkaya Dokumen Word</option>
@@ -90,48 +92,51 @@
           </div>
           <div>
             <label class="text-xs font-bold">Kunci Jawaban Benar</label>
-            <select id="soal-kunci" class="w-full mt-1 p-2.5 border rounded-xl bg-white">
+            <select id="soal-kunci" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl bg-white">
               <option value="A">Pilihan A</option>
               <option value="B">Pilihan B</option>
               <option value="C">Pilihan C</option>
             </select>
           </div>
           <div class="md:col-span-2">
-            <label class="text-xs font-bold">Stimulus Soal (Cerita / Kasus / Ilustrasi Teks)</label>
-            <textarea id="soal-stimulus" rows="2" class="w-full mt-1 p-2.5 border rounded-xl" placeholder="Contoh: Rina ingin membuat daftar piket kelas agar terlihat rapi dalam bentuk baris dan kolom..."></textarea>
+            <label class="text-xs font-bold">Stimulus Soal (Kasus / Teks Cerita)</label>
+            <textarea id="soal-stimulus" rows="2" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" placeholder="Contoh: Rina merapikan file tugas ke dalam folder khusus..."></textarea>
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-xs font-bold">Unggah Gambar Soal (Opsional)</label>
+            <input id="soal-img-file" type="file" accept="image/*" class="w-full mt-1 p-2.5 border-2 border-dashed border-indigo-400 bg-indigo-50 rounded-xl text-sm" />
           </div>
           <div class="md:col-span-2">
             <label class="text-xs font-bold">Pertanyaan</label>
-            <input id="soal-pertanyaan" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+            <input id="soal-pertanyaan" type="text" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" />
           </div>
           <div>
             <label class="text-xs font-bold">Pilihan A</label>
-            <input id="soal-a" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+            <input id="soal-a" type="text" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" />
           </div>
           <div>
             <label class="text-xs font-bold">Pilihan B</label>
-            <input id="soal-b" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+            <input id="soal-b" type="text" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" />
           </div>
           <div>
             <label class="text-xs font-bold">Pilihan C</label>
-            <input id="soal-c" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+            <input id="soal-c" type="text" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" />
           </div>
           <div>
-            <label class="text-xs font-bold">Penjelasan Jawaban (Muncul Setelah Siswa Menjawab)</label>
-            <input id="soal-penjelasan" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+            <label class="text-xs font-bold">Penjelasan Alasan Jawaban Benar (Muncul Instan saat Siswa Jawab)[cite: 1]</label>
+            <input id="soal-penjelasan" type="text" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl" placeholder="Contoh: Karena folder berfungsi untuk mengelompokkan file..." />
           </div>
         </div>
         <div class="mt-4 flex gap-2">
-          <button onclick="saveSoal()" class="bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl">💾 Simpan Soal</button>
-          <button onclick="resetSoalForm()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl">Batal Edit</button>
+          <button onclick="saveSoal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-sm">💾 Simpan Soal</button>
+          <button onclick="resetSoalForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-5 py-3 rounded-xl">Batal</button>
         </div>
       </div>
 
-      <!-- Daftar Soal Tersimpan -->
-      <div class="bg-white p-6 rounded-2xl border border-slate-200">
+      <div class="bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-extrabold text-lg">Daftar Soal Tersimpan</h3>
-          <select id="filter-soal-bab" onchange="renderAdminSoalList()" class="p-2 border rounded-xl text-sm">
+          <select id="filter-soal-bab" onchange="renderAdminSoalList()" class="p-2.5 border-2 border-slate-300 rounded-xl text-sm bg-white">
             <option value="all">Semua Bab</option>
             <option value="bab1">Bab 1</option>
             <option value="bab2">Bab 2</option>
@@ -146,15 +151,20 @@
     </section>
 
     <!-- PANEL 3: EDIT KISI-KISI -->
-    <section id="admin-tab-kisikisi" class="admin-panel hidden bg-white p-6 rounded-2xl border border-slate-200">
+    <section id="admin-tab-kisikisi" class="admin-panel hidden bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm">
       <h2 class="text-lg font-extrabold mb-3">📋 Edit Kisi-Kisi Pembelajaran</h2>
       <div id="admin-kisikisi-list" class="space-y-4"></div>
     </section>
 
-    <!-- PANEL 4: LEADERBOARD -->
-    <section id="admin-tab-leaderboard" class="admin-panel hidden bg-white p-6 rounded-2xl border border-slate-200">
-      <h2 class="text-lg font-extrabold mb-3">🏆 Peringkat Siswa Real-Time</h2>
-      <div id="admin-leaderboard-list" class="space-y-2"></div>
+    <!-- PANEL 4: KELOLA AKUN SISWA (HAPUS USER) -->
+    <section id="admin-tab-siswa" class="admin-panel hidden bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 class="text-lg font-extrabold">👥 Kelola & Hapus Akun Siswa</h2>
+          <p class="text-xs text-slate-600">Guru dapat menghapus akun siswa yang duplikat atau salah nama.</p>
+        </div>
+      </div>
+      <div id="admin-siswa-list" class="space-y-3"></div>
     </section>
   </div>
 
@@ -185,22 +195,43 @@
     function showAdminTab(name) {
       document.querySelectorAll(".admin-panel").forEach(p => p.classList.add("hidden"));
       document.getElementById("admin-tab-" + name).classList.remove("hidden");
+
+      document.querySelectorAll(".admin-nav-btn").forEach(btn => {
+        btn.className = "admin-nav-btn bg-white text-slate-700 border-2 text-sm font-bold px-4 py-2.5 rounded-xl";
+      });
+      event.target.className = "admin-nav-btn bg-indigo-600 text-white text-sm font-bold px-4 py-2.5 rounded-xl";
     }
 
-    // Inisialisasi data awal dari kurikulum gambar ke Firestore (sekali klik)[cite: 1]
+    // Fungsi Format Teks Kaya untuk Materi (Tebal, Miring, Underline, Bullet, Simbol)
+    function formatText(babId, command) {
+      const editor = document.getElementById("editor-" + babId);
+      editor.focus();
+      if (command === 'bullet') {
+        document.execCommand('insertUnorderedList', false, null);
+      } else if (command === 'symbol') {
+        const sym = prompt("Masukkan simbol yang ingin disisipkan (contoh: ⭐, 💻, ➡️, ✔️, ❌):", "⭐");
+        if (sym) document.execCommand('insertText', false, sym);
+      } else {
+        document.execCommand(command, false, null);
+      }
+    }
+
     async function seedDefaultData() {
       if (!confirm("Isi database dengan 6 Bab materi awal dan 7 baris kisi-kisi?")) return;
       for (const b of DEFAULT_BAB) {
-        await db.collection("materi").doc(b.id).set(b, { merge: true });
+        await db.collection("materi").doc(b.id).set({
+          ...b,
+          isiHtml: `<p><b>${b.judul}</b></p><p>${b.ringkasan}</p><ul><li>Pahami konsep dasar dengan baik.</li><li>Gunakan perangkat digital secara bijak.</li></ul>`
+        }, { merge: true });
       }
       for (const k of DEFAULT_KISIKISI) {
         await db.collection("kisikisi").doc("row_" + k.no).set(k);
       }
-      alert("Data awal berhasil dimasukkan!");
+      alert("Data awal berhasil dimuat!");
     }
 
     function initAdminListeners() {
-      // Materi & PDF
+      // Materi & Editor Kaya
       db.collection("materi").orderBy("nomor").onSnapshot(snap => {
         const container = document.getElementById("admin-materi-list");
         container.innerHTML = "";
@@ -208,29 +239,48 @@
           const b = doc.data();
           const pdfs = b.pdfs || [];
           const pdfListHTML = pdfs.map((p, idx) => `
-            <div class="flex items-center justify-between bg-slate-100 px-3 py-1.5 rounded-lg text-xs mt-1">
-              <a href="${p.viewUrl}" target="_blank" class="text-indigo-700 font-bold truncate max-w-[200px]">📄 ${p.title}</a>
-              <button onclick="removePdfFromBab('${b.id}', ${idx})" class="text-rose-600 font-bold">Hapus</button>
+            <div class="flex items-center justify-between bg-slate-100 px-3 py-2 rounded-xl text-xs mt-2 border">
+              <a href="${p.viewUrl}" target="_blank" class="text-indigo-700 font-bold truncate max-w-[250px]">📄 ${p.title}</a>
+              <button onclick="removePdfFromBab('${b.id}', ${idx})" class="text-rose-600 font-bold hover:underline">Hapus PDF</button>
             </div>
           `).join("");
 
           container.innerHTML += `
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <div class="font-extrabold text-indigo-700 mb-2">Bab ${b.nomor}</div>
-              <input id="judul-${b.id}" value="${b.judul}" class="w-full p-2 border rounded-xl font-bold text-sm mb-2" />
-              <textarea id="cp-${b.id}" rows="2" class="w-full p-2 border rounded-xl text-xs mb-2">${b.cp}</textarea>
-              <textarea id="ringkasan-${b.id}" rows="3" class="w-full p-2 border rounded-xl text-xs mb-2">${b.ringkasan}</textarea>
-              <button onclick="updateMateriText('${b.id}')" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl mb-4">Simpan Teks Materi</button>
+            <div class="bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="bg-indigo-100 text-indigo-900 font-extrabold text-xs px-3 py-1 rounded-full">Bab ${b.nomor}</span>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-slate-700">Judul Bab</label>
+                <input id="judul-${b.id}" value="${b.judul}" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl font-bold text-sm" />
+              </div>
+              <div>
+                <label class="text-xs font-bold text-slate-700">Tujuan Pembelajaran (CP)</label>
+                <textarea id="cp-${b.id}" rows="2" class="w-full mt-1 p-3 border-2 border-slate-300 rounded-xl text-xs">${b.cp}</textarea>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-slate-700">Isi Materi Pembelajaran (Format Kaya: Tebal, Miring, Garis Bawah, Bullet, Simbol)</label>
+                <!-- Tombol Toolbar Editor -->
+                <div class="flex flex-wrap gap-1.5 my-1.5 bg-slate-100 p-2 rounded-xl border border-slate-300">
+                  <button type="button" onclick="formatText('${b.id}', 'bold')" class="px-3 py-1 bg-white border rounded-lg font-bold text-xs shadow-sm"><b>B</b></button>
+                  <button type="button" onclick="formatText('${b.id}', 'italic')" class="px-3 py-1 bg-white border rounded-lg italic text-xs shadow-sm"><i>I</i></button>
+                  <button type="button" onclick="formatText('${b.id}', 'underline')" class="px-3 py-1 bg-white border rounded-lg underline text-xs shadow-sm"><u>U</u></button>
+                  <button type="button" onclick="formatText('${b.id}', 'bullet')" class="px-3 py-1 bg-white border rounded-lg text-xs shadow-sm">• List</button>
+                  <button type="button" onclick="formatText('${b.id}', 'symbol')" class="px-3 py-1 bg-white border rounded-lg text-xs shadow-sm">⭐ Sisip Simbol</button>
+                </div>
+                <div id="editor-${b.id}" contenteditable="true" class="rich-editor-content">${b.isiHtml || b.ringkasan}</div>
+              </div>
+              <button onclick="updateMateri('${b.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-sm">Simpan Materi & Format</button>
 
-              <div class="border-t pt-3">
-                <div class="text-xs font-bold mb-1">File PDF Materi (${pdfs.length}/3 file):</div>
+              <div class="border-t-2 pt-4 mt-2">
+                <div class="text-xs font-bold mb-2">Upload Modul PDF (${pdfs.length}/3 file):</div>
                 ${pdfListHTML}
                 ${pdfs.length < 3 ? `
                   <div class="mt-2 flex gap-2">
-                    <input type="file" id="pdf-input-${b.id}" accept=".pdf" class="text-xs w-full" />
-                    <button onclick="uploadMateriPdf('${b.id}')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">Upload PDF</button>
+                    <input type="file" id="pdf-input-${b.id}" accept=".pdf" class="text-xs w-full p-2 border rounded-xl bg-slate-50" />
+                    <button onclick="uploadMateriPdf('${b.id}')" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl shrink-0">Upload PDF</button>
                   </div>
-                ` : '<p class="text-[11px] text-amber-600 mt-1">Maksimal 3 PDF tercapai.</p>'}
+                ` : '<p class="text-xs text-amber-600 mt-1">Maksimal 3 PDF tercapai.</p>'}
               </div>
             </div>
           `;
@@ -250,11 +300,11 @@
         snap.forEach(doc => {
           const k = doc.data();
           box.innerHTML += `
-            <div class="p-4 border rounded-xl grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
-              <input id="kk-tujuan-${k.no}" value="${k.tujuan}" class="md:col-span-2 p-2 border rounded-lg text-xs" />
-              <input id="kk-materi-${k.no}" value="${k.materi}" class="p-2 border rounded-lg text-xs" />
+            <div class="p-4 border-2 border-slate-200 rounded-xl grid grid-cols-1 md:grid-cols-4 gap-2 items-center bg-slate-50">
+              <input id="kk-tujuan-${k.no}" value="${k.tujuan}" class="md:col-span-2 p-2.5 border rounded-lg text-xs bg-white" />
+              <input id="kk-materi-${k.no}" value="${k.materi}" class="p-2.5 border rounded-lg text-xs bg-white" />
               <div class="flex gap-1">
-                <input id="kk-elemen-${k.no}" value="${k.elemen}" class="w-20 p-2 border rounded-lg text-xs" />
+                <input id="kk-elemen-${k.no}" value="${k.elemen}" class="w-20 p-2.5 border rounded-lg text-xs bg-white" />
                 <button onclick="saveKisiKisi(${k.no})" class="bg-indigo-600 text-white text-xs font-bold px-3 rounded-lg">Simpan</button>
               </div>
             </div>
@@ -262,30 +312,38 @@
         });
       });
 
-      // Leaderboard
-      db.collection("students").orderBy("points", "desc").onSnapshot(snap => {
-        const box = document.getElementById("admin-leaderboard-list");
+      // Kelola Akun Siswa (Hapus User)
+      db.collection("students").onSnapshot(snap => {
+        const box = document.getElementById("admin-siswa-list");
         box.innerHTML = "";
-        let i = 1;
+        if (snap.empty) {
+          box.innerHTML = `<p class="text-sm text-slate-500 italic">Belum ada siswa yang mendaftar.</p>`;
+          return;
+        }
         snap.forEach(doc => {
           const s = doc.data();
           box.innerHTML += `
-            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border">
-              <div><b>#${i++} ${s.nama}</b> (Kelas ${s.kelas})</div>
-              <div class="font-bold text-amber-700">⭐ ${s.points} Poin</div>
+            <div class="flex justify-between items-center p-3.5 bg-slate-50 rounded-2xl border-2 border-slate-200">
+              <div>
+                <div class="font-extrabold text-slate-900">${s.nama} <span class="text-xs bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded-full ml-1">Kelas ${s.kelas}</span></div>
+                <div class="text-xs text-slate-600">Poin: ⭐ ${s.points}</div>
+              </div>
+              <button onclick="deleteStudent('${s.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold text-xs px-3.5 py-2 rounded-xl">🗑️ Hapus Akun</button>
             </div>
           `;
         });
       });
     }
 
-    async function updateMateriText(babId) {
+    async function updateMateri(babId) {
+      const isiHtml = document.getElementById("editor-" + babId).innerHTML;
       await db.collection("materi").doc(babId).update({
         judul: document.getElementById("judul-" + babId).value,
         cp: document.getElementById("cp-" + babId).value,
-        ringkasan: document.getElementById("ringkasan-" + babId).value
+        isiHtml,
+        ringkasan: isiHtml.replace(/<[^>]*>?/gm, '').substring(0, 150) + "..."
       });
-      alert("Materi berhasil diperbarui!");
+      alert("Materi & format berhasil disimpan!");
     }
 
     function uploadMateriPdf(babId) {
@@ -298,12 +356,7 @@
         const base64 = reader.result.split(",")[1];
         const res = await fetch(GAS_WEB_APP_URL, {
           method: "POST",
-          body: JSON.stringify({
-            type: "materi",
-            fileName: `${babId}_${file.name}`,
-            mimeType: "application/pdf",
-            base64
-          })
+          body: JSON.stringify({ type: "materi", fileName: `${babId}_${file.name}`, mimeType: "application/pdf", base64 })
         });
         const data = await res.json();
         if (data.status === "success") {
@@ -319,7 +372,7 @@
     }
 
     async function removePdfFromBab(babId, index) {
-      if (!confirm("Hapus tautan PDF ini dari materi siswa?")) return;
+      if (!confirm("Hapus tautan PDF ini?")) return;
       const docRef = db.collection("materi").doc(babId);
       const snap = await docRef.get();
       const pdfs = snap.data().pdfs || [];
@@ -327,27 +380,50 @@
       await docRef.update({ pdfs });
     }
 
+    // Simpan Soal dengan Gambar (Base64)
     async function saveSoal() {
       const editId = document.getElementById("edit-soal-id").value;
-      const payload = {
-        babId: document.getElementById("soal-bab").value,
-        stimulus: document.getElementById("soal-stimulus").value,
-        pertanyaan: document.getElementById("soal-pertanyaan").value,
-        opsiA: document.getElementById("soal-a").value,
-        opsiB: document.getElementById("soal-b").value,
-        opsiC: document.getElementById("soal-c").value,
-        kunci: document.getElementById("soal-kunci").value,
-        penjelasan: document.getElementById("soal-penjelasan").value
-      };
-      if (!payload.pertanyaan) return alert("Pertanyaan tidak boleh kosong!");
+      const imgFile = document.getElementById("soal-img-file").files[0];
 
-      if (editId) {
-        await db.collection("soal").doc(editId).update(payload);
+      const processSoalData = async (imageUrl = "") => {
+        const payload = {
+          babId: document.getElementById("soal-bab").value,
+          stimulus: document.getElementById("soal-stimulus").value,
+          pertanyaan: document.getElementById("soal-pertanyaan").value,
+          opsiA: document.getElementById("soal-a").value,
+          opsiB: document.getElementById("soal-b").value,
+          opsiC: document.getElementById("soal-c").value,
+          kunci: document.getElementById("soal-kunci").value,
+          penjelasan: document.getElementById("soal-penjelasan").value
+        };
+        if (imageUrl) payload.imageUrl = imageUrl;
+        else if (!editId) payload.imageUrl = "";
+
+        if (!payload.pertanyaan) return alert("Pertanyaan tidak boleh kosong!");
+
+        if (editId) {
+          await db.collection("soal").doc(editId).update(payload);
+        } else {
+          await db.collection("soal").add(payload);
+        }
+        resetSoalForm();
+        alert("Soal berhasil disimpan & tersinkron instan!");
+      };
+
+      if (imgFile) {
+        const reader = new FileReader();
+        reader.onload = async function() {
+          await processSoalData(reader.result);
+        };
+        reader.readAsDataURL(imgFile);
       } else {
-        await db.collection("soal").add(payload);
+        if (editId) {
+          const existing = allSoal.find(s => s.id === editId);
+          await processSoalData(existing.imageUrl || "");
+        } else {
+          await processSoalData("");
+        }
       }
-      resetSoalForm();
-      alert("Soal berhasil disimpan!");
     }
 
     function editSoal(id) {
@@ -366,6 +442,7 @@
 
     function resetSoalForm() {
       document.getElementById("edit-soal-id").value = "";
+      document.getElementById("soal-img-file").value = "";
       ["soal-stimulus", "soal-pertanyaan", "soal-a", "soal-b", "soal-c", "soal-penjelasan"].forEach(id => {
         document.getElementById(id).value = "";
       });
@@ -375,20 +452,28 @@
       if (confirm("Hapus soal ini?")) await db.collection("soal").doc(id).delete();
     }
 
+    async function deleteStudent(studentId) {
+      if (confirm("Yakin ingin menghapus akun siswa ini dari database?")) {
+        await db.collection("students").doc(studentId).delete();
+        alert("Akun siswa berhasil dihapus.");
+      }
+    }
+
     function renderAdminSoalList() {
       const filter = document.getElementById("filter-soal-bab").value;
       const filtered = filter === "all" ? allSoal : allSoal.filter(s => s.babId === filter);
       document.getElementById("admin-soal-list").innerHTML = filtered.map((s, idx) => `
-        <div class="p-4 border rounded-xl flex justify-between items-start gap-4">
+        <div class="p-4 border-2 border-slate-200 rounded-2xl flex justify-between items-start gap-4 bg-slate-50">
           <div>
-            <span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">${s.babId.toUpperCase()}</span>
-            <p class="text-xs text-slate-500 mt-1 italic">"${s.stimulus}"</p>
-            <p class="font-bold text-sm mt-1">${idx + 1}. ${s.pertanyaan}</p>
-            <p class="text-xs text-emerald-700 font-bold mt-1">Kunci: ${s.kunci} — ${s.penjelasan}</p>
+            <span class="text-xs font-bold bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded-full">${s.babId.toUpperCase()}</span>
+            ${s.imageUrl ? `<img src="${s.imageUrl}" class="w-24 h-24 object-cover my-2 rounded-lg border" />` : ''}
+            <p class="text-xs text-slate-600 mt-1 italic">"${s.stimulus}"</p>
+            <p class="font-extrabold text-sm mt-1">${idx + 1}. ${s.pertanyaan}</p>
+            <p class="text-xs text-emerald-800 font-bold mt-1">Kunci: ${s.kunci} — ${s.penjelasan || '-'}</p>
           </div>
           <div class="flex gap-2 shrink-0">
-            <button onclick="editSoal('${s.id}')" class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-lg">Edit</button>
-            <button onclick="deleteSoal('${s.id}')" class="bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-lg">Hapus</button>
+            <button onclick="editSoal('${s.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-1.5 rounded-xl">Edit</button>
+            <button onclick="deleteSoal('${s.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-xl">Hapus</button>
           </div>
         </div>
       `).join("");
@@ -401,7 +486,7 @@
         materi: document.getElementById("kk-materi-" + no).value,
         elemen: document.getElementById("kk-elemen-" + no).value
       });
-      alert("Baris kisi-kisi diperbarui!");
+      alert("Kisi-kisi diperbarui!");
     }
   </script>
 </body>
