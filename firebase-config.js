@@ -8,7 +8,7 @@ const firebaseConfig = {
 };
 
 // Jangan lupa ganti juga URL Web App Google Apps Script milikmu di bawah ini:
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyHenRr7NjwffYFZgmLNbeKejpO2dXPO7tHxWxOvrN2sfImB42EGYJiR1x_zNB8RUBxtg/exec";
 
 // Inisialisasi Firebase (Versi Compat)
 firebase.initializeApp(firebaseConfig);
