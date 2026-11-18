@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Admin Guru — TIK Kelas 4 SD</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <style>
+    body { font-family: 'Andika', sans-serif; line-height: 1.4; background-color: #F1F5F9; }
+    h1, h2, h3, h4, button { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="text-slate-800">
+
+  <!-- ==================== LOGIN KHUSUS ADMIN/GURU ==================== -->
+  <div id="admin-login-box" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-lg border border-slate-200">
+      <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">🔒 Area Terbatas Guru</span>
+      <h1 class="text-2xl font-extrabold text-slate-900 mt-2 mb-1">Portal Admin Pembelajaran</h1>
+      <p class="text-sm text-slate-500 mb-6">Masuk dengan akun Guru untuk mengelola materi PDF, bank soal, kisi-kisi, dan peringkat.</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs font-bold text-slate-700">Email Guru</label>
+          <input id="admin-email" type="email" placeholder="guru@sekolah.sch.id" class="w-full mt-1 px-4 py-2.5 rounded-xl border border-slate-300" />
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-700">Kata Sandi</label>
+          <input id="admin-pass" type="password" placeholder="••••••••" class="w-full mt-1 px-4 py-2.5 rounded-xl border border-slate-300" />
+        </div>
+        <button onclick="adminLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl">
+          Masuk ke Dashboard Admin
+        </button>
+        <p id="admin-login-err" class="text-xs text-rose-600 font-bold text-center"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ADMIN ==================== -->
+  <div id="admin-dashboard" class="hidden max-w-6xl mx-auto p-4 md:p-6">
+    <header class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-3 mb-6">
+      <div>
+        <h1 class="text-xl font-extrabold text-indigo-700">🛠️ Dashboard Guru — TIK Kelas 4</h1>
+        <p class="text-xs text-slate-500">Perubahan langsung tersinkron ke perangkat siswa secara real-time.</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="seedDefaultData()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl">
+          ⚡ Isi Data Awal Bab & Kisi-Kisi
+        </button>
+        <button onclick="auth.signOut()" class="bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+          Keluar
+        </button>
+      </div>
+    </header>
+
+    <!-- Menu Admin -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button onclick="showAdminTab('materi')" class="bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-xl">1. Materi & PDF (1-3/Bab)</button>
+      <button onclick="showAdminTab('soal')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">2. Bank Soal & Jawaban</button>
+      <button onclick="showAdminTab('kisikisi')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">3. Edit Kisi-Kisi</button>
+      <button onclick="showAdminTab('leaderboard')" class="bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">4. Pantau Leaderboard</button>
+    </div>
+
+    <!-- PANEL 1: EDIT MATERI & UPLOAD PDF (MAKSIMAL 3 PDF PER BAB) -->
+    <section id="admin-tab-materi" class="admin-panel space-y-5">
+      <div id="admin-materi-list" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- PANEL 2: KELOLA SOAL & JAWABAN -->
+    <section id="admin-tab-soal" class="admin-panel hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-slate-200">
+        <h2 class="text-lg font-extrabold mb-3" id="form-soal-title">➕ Tambah / Edit Soal Kuis</h2>
+        <input type="hidden" id="edit-soal-id" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold">Pilih Bab</label>
+            <select id="soal-bab" class="w-full mt-1 p-2.5 border rounded-xl bg-white">
+              <option value="bab1">Bab 1 - Komputer & Manajemen File/Folder</option>
+              <option value="bab2">Bab 2 - Dokumen Rapi di Microsoft Word</option>
+              <option value="bab3">Bab 3 - Memperkaya Dokumen Word</option>
+              <option value="bab4">Bab 4 - Tabel & Pengumpulan Data</option>
+              <option value="bab5">Bab 5 - Berpikir Komputasional & Algoritma</option>
+              <option value="bab6">Bab 6 - Mengenal Kecerdasan Artifisial (AI)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold">Kunci Jawaban Benar</label>
+            <select id="soal-kunci" class="w-full mt-1 p-2.5 border rounded-xl bg-white">
+              <option value="A">Pilihan A</option>
+              <option value="B">Pilihan B</option>
+              <option value="C">Pilihan C</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-xs font-bold">Stimulus Soal (Cerita / Kasus / Ilustrasi Teks)</label>
+            <textarea id="soal-stimulus" rows="2" class="w-full mt-1 p-2.5 border rounded-xl" placeholder="Contoh: Rina ingin membuat daftar piket kelas agar terlihat rapi dalam bentuk baris dan kolom..."></textarea>
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-xs font-bold">Pertanyaan</label>
+            <input id="soal-pertanyaan" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+          </div>
+          <div>
+            <label class="text-xs font-bold">Pilihan A</label>
+            <input id="soal-a" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+          </div>
+          <div>
+            <label class="text-xs font-bold">Pilihan B</label>
+            <input id="soal-b" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+          </div>
+          <div>
+            <label class="text-xs font-bold">Pilihan C</label>
+            <input id="soal-c" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+          </div>
+          <div>
+            <label class="text-xs font-bold">Penjelasan Jawaban (Muncul Setelah Siswa Menjawab)</label>
+            <input id="soal-penjelasan" type="text" class="w-full mt-1 p-2.5 border rounded-xl" />
+          </div>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <button onclick="saveSoal()" class="bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl">💾 Simpan Soal</button>
+          <button onclick="resetSoalForm()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl">Batal Edit</button>
+        </div>
+      </div>
+
+      <!-- Daftar Soal Tersimpan -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-extrabold text-lg">Daftar Soal Tersimpan</h3>
+          <select id="filter-soal-bab" onchange="renderAdminSoalList()" class="p-2 border rounded-xl text-sm">
+            <option value="all">Semua Bab</option>
+            <option value="bab1">Bab 1</option>
+            <option value="bab2">Bab 2</option>
+            <option value="bab3">Bab 3</option>
+            <option value="bab4">Bab 4</option>
+            <option value="bab5">Bab 5</option>
+            <option value="bab6">Bab 6</option>
+          </select>
+        </div>
+        <div id="admin-soal-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: EDIT KISI-KISI -->
+    <section id="admin-tab-kisikisi" class="admin-panel hidden bg-white p-6 rounded-2xl border border-slate-200">
+      <h2 class="text-lg font-extrabold mb-3">📋 Edit Kisi-Kisi Pembelajaran</h2>
+      <div id="admin-kisikisi-list" class="space-y-4"></div>
+    </section>
+
+    <!-- PANEL 4: LEADERBOARD -->
+    <section id="admin-tab-leaderboard" class="admin-panel hidden bg-white p-6 rounded-2xl border border-slate-200">
+      <h2 class="text-lg font-extrabold mb-3">🏆 Peringkat Siswa Real-Time</h2>
+      <div id="admin-leaderboard-list" class="space-y-2"></div>
+    </section>
+  </div>
+
+  <script>
+    let allSoal = [];
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById("admin-login-box").classList.add("hidden");
+        document.getElementById("admin-dashboard").classList.remove("hidden");
+        initAdminListeners();
+      } else {
+        document.getElementById("admin-login-box").classList.remove("hidden");
+        document.getElementById("admin-dashboard").classList.add("hidden");
+      }
+    });
+
+    async function adminLogin() {
+      const email = document.getElementById("admin-email").value.trim();
+      const pass = document.getElementById("admin-pass").value;
+      try {
+        await auth.signInWithEmailAndPassword(email, pass);
+      } catch (e) {
+        document.getElementById("admin-login-err").textContent = "Login gagal: " + e.message;
+      }
+    }
+
+    function showAdminTab(name) {
+      document.querySelectorAll(".admin-panel").forEach(p => p.classList.add("hidden"));
+      document.getElementById("admin-tab-" + name).classList.remove("hidden");
+    }
+
+    // Inisialisasi data awal dari kurikulum gambar ke Firestore (sekali klik)[cite: 1]
+    async function seedDefaultData() {
+      if (!confirm("Isi database dengan 6 Bab materi awal dan 7 baris kisi-kisi?")) return;
+      for (const b of DEFAULT_BAB) {
+        await db.collection("materi").doc(b.id).set(b, { merge: true });
+      }
+      for (const k of DEFAULT_KISIKISI) {
+        await db.collection("kisikisi").doc("row_" + k.no).set(k);
+      }
+      alert("Data awal berhasil dimasukkan!");
+    }
+
+    function initAdminListeners() {
+      // Materi & PDF
+      db.collection("materi").orderBy("nomor").onSnapshot(snap => {
+        const container = document.getElementById("admin-materi-list");
+        container.innerHTML = "";
+        snap.forEach(doc => {
+          const b = doc.data();
+          const pdfs = b.pdfs || [];
+          const pdfListHTML = pdfs.map((p, idx) => `
+            <div class="flex items-center justify-between bg-slate-100 px-3 py-1.5 rounded-lg text-xs mt-1">
+              <a href="${p.viewUrl}" target="_blank" class="text-indigo-700 font-bold truncate max-w-[200px]">📄 ${p.title}</a>
+              <button onclick="removePdfFromBab('${b.id}', ${idx})" class="text-rose-600 font-bold">Hapus</button>
+            </div>
+          `).join("");
+
+          container.innerHTML += `
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="font-extrabold text-indigo-700 mb-2">Bab ${b.nomor}</div>
+              <input id="judul-${b.id}" value="${b.judul}" class="w-full p-2 border rounded-xl font-bold text-sm mb-2" />
+              <textarea id="cp-${b.id}" rows="2" class="w-full p-2 border rounded-xl text-xs mb-2">${b.cp}</textarea>
+              <textarea id="ringkasan-${b.id}" rows="3" class="w-full p-2 border rounded-xl text-xs mb-2">${b.ringkasan}</textarea>
+              <button onclick="updateMateriText('${b.id}')" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl mb-4">Simpan Teks Materi</button>
+
+              <div class="border-t pt-3">
+                <div class="text-xs font-bold mb-1">File PDF Materi (${pdfs.length}/3 file):</div>
+                ${pdfListHTML}
+                ${pdfs.length < 3 ? `
+                  <div class="mt-2 flex gap-2">
+                    <input type="file" id="pdf-input-${b.id}" accept=".pdf" class="text-xs w-full" />
+                    <button onclick="uploadMateriPdf('${b.id}')" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">Upload PDF</button>
+                  </div>
+                ` : '<p class="text-[11px] text-amber-600 mt-1">Maksimal 3 PDF tercapai.</p>'}
+              </div>
+            </div>
+          `;
+        });
+      });
+
+      // Soal
+      db.collection("soal").onSnapshot(snap => {
+        allSoal = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAdminSoalList();
+      });
+
+      // Kisi-Kisi
+      db.collection("kisikisi").orderBy("no").onSnapshot(snap => {
+        const box = document.getElementById("admin-kisikisi-list");
+        box.innerHTML = "";
+        snap.forEach(doc => {
+          const k = doc.data();
+          box.innerHTML += `
+            <div class="p-4 border rounded-xl grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
+              <input id="kk-tujuan-${k.no}" value="${k.tujuan}" class="md:col-span-2 p-2 border rounded-lg text-xs" />
+              <input id="kk-materi-${k.no}" value="${k.materi}" class="p-2 border rounded-lg text-xs" />
+              <div class="flex gap-1">
+                <input id="kk-elemen-${k.no}" value="${k.elemen}" class="w-20 p-2 border rounded-lg text-xs" />
+                <button onclick="saveKisiKisi(${k.no})" class="bg-indigo-600 text-white text-xs font-bold px-3 rounded-lg">Simpan</button>
+              </div>
+            </div>
+          `;
+        });
+      });
+
+      // Leaderboard
+      db.collection("students").orderBy("points", "desc").onSnapshot(snap => {
+        const box = document.getElementById("admin-leaderboard-list");
+        box.innerHTML = "";
+        let i = 1;
+        snap.forEach(doc => {
+          const s = doc.data();
+          box.innerHTML += `
+            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border">
+              <div><b>#${i++} ${s.nama}</b> (Kelas ${s.kelas})</div>
+              <div class="font-bold text-amber-700">⭐ ${s.points} Poin</div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    async function updateMateriText(babId) {
+      await db.collection("materi").doc(babId).update({
+        judul: document.getElementById("judul-" + babId).value,
+        cp: document.getElementById("cp-" + babId).value,
+        ringkasan: document.getElementById("ringkasan-" + babId).value
+      });
+      alert("Materi berhasil diperbarui!");
+    }
+
+    function uploadMateriPdf(babId) {
+      const input = document.getElementById("pdf-input-" + babId);
+      if (!input.files.length) return alert("Pilih file PDF terlebih dahulu!");
+      const file = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = async function () {
+        const base64 = reader.result.split(",")[1];
+        const res = await fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            type: "materi",
+            fileName: `${babId}_${file.name}`,
+            mimeType: "application/pdf",
+            base64
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          const docRef = db.collection("materi").doc(babId);
+          const snap = await docRef.get();
+          const currentPdfs = snap.data().pdfs || [];
+          currentPdfs.push({ title: file.name, viewUrl: data.viewUrl, downloadUrl: data.downloadUrl });
+          await docRef.update({ pdfs: currentPdfs });
+          alert("PDF berhasil diunggah & tersinkron ke siswa!");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function removePdfFromBab(babId, index) {
+      if (!confirm("Hapus tautan PDF ini dari materi siswa?")) return;
+      const docRef = db.collection("materi").doc(babId);
+      const snap = await docRef.get();
+      const pdfs = snap.data().pdfs || [];
+      pdfs.splice(index, 1);
+      await docRef.update({ pdfs });
+    }
+
+    async function saveSoal() {
+      const editId = document.getElementById("edit-soal-id").value;
+      const payload = {
+        babId: document.getElementById("soal-bab").value,
+        stimulus: document.getElementById("soal-stimulus").value,
+        pertanyaan: document.getElementById("soal-pertanyaan").value,
+        opsiA: document.getElementById("soal-a").value,
+        opsiB: document.getElementById("soal-b").value,
+        opsiC: document.getElementById("soal-c").value,
+        kunci: document.getElementById("soal-kunci").value,
+        penjelasan: document.getElementById("soal-penjelasan").value
+      };
+      if (!payload.pertanyaan) return alert("Pertanyaan tidak boleh kosong!");
+
+      if (editId) {
+        await db.collection("soal").doc(editId).update(payload);
+      } else {
+        await db.collection("soal").add(payload);
+      }
+      resetSoalForm();
+      alert("Soal berhasil disimpan!");
+    }
+
+    function editSoal(id) {
+      const s = allSoal.find(item => item.id === id);
+      document.getElementById("edit-soal-id").value = s.id;
+      document.getElementById("soal-bab").value = s.babId;
+      document.getElementById("soal-stimulus").value = s.stimulus;
+      document.getElementById("soal-pertanyaan").value = s.pertanyaan;
+      document.getElementById("soal-a").value = s.opsiA;
+      document.getElementById("soal-b").value = s.opsiB;
+      document.getElementById("soal-c").value = s.opsiC;
+      document.getElementById("soal-kunci").value = s.kunci;
+      document.getElementById("soal-penjelasan").value = s.penjelasan;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetSoalForm() {
+      document.getElementById("edit-soal-id").value = "";
+      ["soal-stimulus", "soal-pertanyaan", "soal-a", "soal-b", "soal-c", "soal-penjelasan"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+    }
+
+    async function deleteSoal(id) {
+      if (confirm("Hapus soal ini?")) await db.collection("soal").doc(id).delete();
+    }
+
+    function renderAdminSoalList() {
+      const filter = document.getElementById("filter-soal-bab").value;
+      const filtered = filter === "all" ? allSoal : allSoal.filter(s => s.babId === filter);
+      document.getElementById("admin-soal-list").innerHTML = filtered.map((s, idx) => `
+        <div class="p-4 border rounded-xl flex justify-between items-start gap-4">
+          <div>
+            <span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">${s.babId.toUpperCase()}</span>
+            <p class="text-xs text-slate-500 mt-1 italic">"${s.stimulus}"</p>
+            <p class="font-bold text-sm mt-1">${idx + 1}. ${s.pertanyaan}</p>
+            <p class="text-xs text-emerald-700 font-bold mt-1">Kunci: ${s.kunci} — ${s.penjelasan}</p>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button onclick="editSoal('${s.id}')" class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-lg">Edit</button>
+            <button onclick="deleteSoal('${s.id}')" class="bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-lg">Hapus</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function saveKisiKisi(no) {
+      await db.collection("kisikisi").doc("row_" + no).set({
+        no,
+        tujuan: document.getElementById("kk-tujuan-" + no).value,
+        materi: document.getElementById("kk-materi-" + no).value,
+        elemen: document.getElementById("kk-elemen-" + no).value
+      });
+      alert("Baris kisi-kisi diperbarui!");
+    }
+  </script>
+</body>
+</html>

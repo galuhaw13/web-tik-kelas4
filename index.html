@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Petualangan TIK Kelas 4 SD</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <style>
+    body {
+      font-family: 'Andika', sans-serif;
+      line-height: 1.4;
+      background: linear-gradient(135deg, #FEF9C3 0%, #E0F2FE 50%, #DCFCE7 100%);
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, .font-heading, button {
+      font-family: 'Poppins', sans-serif;
+    }
+    .card-kid {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      border: 3px solid #E2E8F0;
+      box-shadow: 0 8px 0 #CBD5E1;
+    }
+    .btn-bouncy {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-bouncy:active {
+      transform: translateY(4px);
+      box-shadow: none !important;
+    }
+  </style>
+</head>
+<body class="text-slate-800 pb-24 md:pb-10">
+
+  <!-- ==================== 1. HALAMAN LOGIN SISWA ==================== -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="card-kid max-w-lg w-full p-6 md:p-8 text-center border-amber-300 shadow-[0_8px_0_#FCD34D]">
+      <div class="inline-block bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-bold mb-2">
+        🐻 Belajar TIK Seru • Kelas 4 SD
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-sky-600 mb-2">Halo, Petualang Digital!</h1>
+      <p class="text-slate-600 mb-5">Isi namamu, pilih kelas, dan pilih teman beruangmu sebelum mulai belajar.</p>
+
+      <!-- Preview Beruang Awal -->
+      <div class="flex justify-center mb-4">
+        <div id="login-bear-preview" class="w-36 h-44 bg-sky-50 rounded-3xl border-2 border-sky-200 flex items-center justify-center p-2"></div>
+      </div>
+
+      <div class="space-y-4 text-left">
+        <div>
+          <label class="font-heading font-bold text-sm text-slate-700">Nama Lengkapmu</label>
+          <input id="input-nama" type="text" placeholder="Contoh: Raka Pratama"
+            class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 focus:border-sky-500 focus:outline-none text-base" />
+        </div>
+
+        <div>
+          <label class="font-heading font-bold text-sm text-slate-700">Pilih Kelas</label>
+          <select id="input-kelas" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 focus:border-sky-500 focus:outline-none text-base bg-white">
+            <option value="4A">Kelas 4A</option>
+            <option value="4B">Kelas 4B</option>
+            <option value="4C">Kelas 4C</option>
+            <option value="4D">Kelas 4D</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-heading font-bold text-sm text-slate-700">Pilih Warna Beruang Awal</label>
+          <div class="grid grid-cols-3 gap-2 mt-1">
+            <button type="button" onclick="selectStarterBear('brown')" id="bear-opt-brown"
+              class="p-2 rounded-2xl border-2 border-amber-500 bg-amber-50 font-heading text-xs font-bold text-amber-900">
+              🐻 Cokelat Madu
+            </button>
+            <button type="button" onclick="selectStarterBear('panda')" id="bear-opt-panda"
+              class="p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700">
+              🐼 Panda Bambu
+            </button>
+            <button type="button" onclick="selectStarterBear('polar')" id="bear-opt-polar"
+              class="p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700">
+              🐻‍❄️ Beruang Kutub
+            </button>
+          </div>
+        </div>
+
+        <button onclick="loginSiswa()"
+          class="w-full mt-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-lg shadow-[0_5px_0_#059669] btn-bouncy">
+          🚀 Masuk & Mulai Belajar!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. DASHBOARD UTAMA SISWA ==================== -->
+  <div id="app-screen" class="hidden max-w-6xl mx-auto p-3 md:p-6">
+    
+    <!-- Header Profil Siswa & Avatar Beruang -->
+    <header class="card-kid p-4 mb-5 flex flex-wrap items-center justify-between gap-4 border-sky-300 shadow-[0_6px_0_#7DD3FC]">
+      <div class="flex items-center gap-3">
+        <div id="header-bear-avatar" class="w-16 h-20 bg-amber-50 rounded-2xl border-2 border-amber-200 flex items-center justify-center shrink-0"></div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="display-nama" class="text-lg md:text-xl font-extrabold text-slate-800">Nama Siswa</h2>
+            <span id="display-kelas" class="bg-sky-100 text-sky-700 font-heading text-xs font-bold px-2.5 py-0.5 rounded-full">4A</span>
+          </div>
+          <div class="flex items-center gap-3 mt-1">
+            <span class="bg-amber-100 text-amber-800 font-heading font-bold text-sm px-3 py-1 rounded-xl">
+              ⭐ Poin: <span id="display-poin">0</span>
+            </span>
+            <button onclick="switchTab('toko')" class="text-xs font-heading font-bold text-pink-600 underline">
+              👕 Ganti Baju Beruang
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="logoutSiswa()"
+        class="bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl shadow-[0_4px_0_#BE123C] btn-bouncy">
+        🚪 Keluar
+      </button>
+    </header>
+
+    <!-- Navigasi Menu Utama -->
+    <nav class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
+      <button onclick="switchTab('materi')" id="nav-materi" class="nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy">
+        📚 Materi
+      </button>
+      <button onclick="switchTab('kuis')" id="nav-kuis" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy relative">
+        🎯 Kuis <span id="quiz-active-badge" class="hidden absolute -top-2 -right-1 bg-amber-400 text-slate-900 text-[10px] px-2 py-0.5 rounded-full">Lanjut!</span>
+      </button>
+      <button onclick="switchTab('kisikisi')" id="nav-kisikisi" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+        📋 Kisi-Kisi
+      </button>
+      <button onclick="switchTab('tugas')" id="nav-tugas" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+        📤 Kumpul Tugas
+      </button>
+      <button onclick="switchTab('toko')" id="nav-toko" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+        🧸 Toko Beruang
+      </button>
+      <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+        🏆 Peringkat
+      </button>
+    </nav>
+
+    <!-- ==================== TAB 1: MATERI & UNDUH PDF ==================== -->
+    <section id="tab-materi" class="tab-content">
+      <div class="mb-4">
+        <h3 class="text-xl md:text-2xl font-extrabold text-sky-700">📚 Materi Belajar TIK (Bab 1 - 6)</h3>
+        <p class="text-slate-600 text-sm">Baca ringkasan materi dan unduh modul PDF dari Bapak/Ibu Guru di setiap kotak bab.</p>
+      </div>
+      <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- ==================== TAB 2: KUIS INTERAKTIF BERSTIMULUS ==================== -->
+    <section id="tab-kuis" class="tab-content hidden">
+      <!-- Pilih Bab Kuis -->
+      <div id="quiz-selector">
+        <h3 class="text-xl md:text-2xl font-extrabold text-emerald-700 mb-1">🎯 Tantangan Kuis Berstimulus</h3>
+        <p class="text-slate-600 text-sm mb-4">Setiap bab berisi 15 soal pilihan ganda (A–C). Jawab dengan teliti untuk mendapatkan ⭐ Poin!</p>
+        <div id="quiz-bab-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- Area Pengerjaan Kuis (State Tersimpan Jika Pindah Tab) -->
+      <div id="quiz-runner" class="hidden card-kid p-5 md:p-7 border-emerald-300 shadow-[0_8px_0_#6EE7B7]">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b-2 border-slate-100 mb-4">
+          <div>
+            <span id="quiz-bab-title" class="text-xs font-heading font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Bab 1</span>
+            <h4 class="text-lg font-extrabold text-slate-800 mt-1">Soal <span id="quiz-q-num">1</span> dari <span id="quiz-q-total">15</span></h4>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-100 text-amber-800 font-heading font-bold text-sm px-3 py-1.5 rounded-xl">
+              Skor Sesi: <span id="quiz-session-score">0</span>
+            </span>
+            <button onclick="pauseQuizToMenu()" class="text-xs font-heading font-bold bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl">
+              ⏸ Pilih Bab Lain
+            </button>
+          </div>
+        </div>
+
+        <!-- Kotak Stimulus -->
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 mb-4">
+          <div class="text-xs font-heading font-bold text-sky-700 mb-1">📖 Bacalah Stimulus Berikut:</div>
+          <p id="quiz-stimulus" class="text-slate-800 text-base"></p>
+        </div>
+
+        <!-- Pertanyaan -->
+        <p id="quiz-question" class="font-heading font-bold text-lg text-slate-900 mb-4"></p>
+
+        <!-- Pilihan A, B, C -->
+        <div id="quiz-options" class="space-y-3 mb-4"></div>
+
+        <!-- Kotak Feedback Jawaban Benar & Penjelasan -->
+        <div id="quiz-feedback" class="hidden rounded-2xl p-4 mb-4 border-2">
+          <div id="quiz-feedback-status" class="font-heading font-extrabold text-base mb-1"></div>
+          <p id="quiz-feedback-answer" class="font-bold text-sm mb-1"></p>
+          <p id="quiz-feedback-explanation" class="text-sm"></p>
+        </div>
+
+        <div class="flex justify-end">
+          <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-3 rounded-2xl shadow-[0_4px_0_#0284C7] btn-bouncy">
+            Soal Berikutnya ➡️
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: KISI-KISI ==================== -->
+    <section id="tab-kisikisi" class="tab-content hidden">
+      <div class="card-kid p-5 md:p-6">
+        <h3 class="text-xl md:text-2xl font-extrabold text-indigo-700 mb-1">📋 Kisi-Kisi Pembelajaran TIK Kelas 4</h3>
+        <p class="text-slate-600 text-sm mb-4">Panduan tujuan pembelajaran dan materi yang akan diujikan.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-indigo-100 text-indigo-900 font-heading text-sm">
+                <th class="p-3 rounded-tl-xl">No</th>
+                <th class="p-3">Tujuan Pembelajaran</th>
+                <th class="p-3">Materi Pokok</th>
+                <th class="p-3 rounded-tr-xl">Elemen</th>
+              </tr>
+            </thead>
+            <tbody id="kisikisi-tbody" class="divide-y divide-slate-200 text-sm md:text-base"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: KUMPUL TUGAS KE GOOGLE DRIVE ==================== -->
+    <section id="tab-tugas" class="tab-content hidden">
+      <div class="card-kid max-w-2xl mx-auto p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
+        <h3 class="text-xl md:text-2xl font-extrabold text-amber-700 mb-1">📤 Kumpul Tugas Digital</h3>
+        <p class="text-slate-600 text-sm mb-5">Unggah hasil karyamu dalam format <b>.doc, .docx, atau .pdf</b>. File akan langsung masuk ke Google Drive Bapak/Ibu Guru tanpa perlu login Google!</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="font-heading font-bold text-sm">Bab / Judul Tugas</label>
+            <select id="tugas-bab" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 bg-white">
+              <option value="Bab 1 - Manajemen File & Folder">Bab 1 - Manajemen File & Folder</option>
+              <option value="Bab 2 - Dokumen Rapi Word">Bab 2 - Dokumen Rapi Word</option>
+              <option value="Bab 3 - Memperkaya Dokumen Word">Bab 3 - Memperkaya Dokumen Word</option>
+              <option value="Bab 4 - Tabel & Data Word">Bab 4 - Tabel & Data Word</option>
+              <option value="Bab 5 - Berpikir Komputasional">Bab 5 - Berpikir Komputasional</option>
+              <option value="Bab 6 - Etika & Konsep AI">Bab 6 - Etika & Konsep AI</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="font-heading font-bold text-sm">Pilih File Tugas (.doc, .docx, .pdf)</label>
+            <input id="tugas-file" type="file" accept=".doc,.docx,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+              class="w-full mt-1 p-3 rounded-2xl border-2 border-dashed border-sky-400 bg-sky-50 text-sm" />
+          </div>
+
+          <button id="btn-kirim-tugas" onclick="uploadTugasSiswa()"
+            class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-[0_5px_0_#D97706] btn-bouncy">
+            ☁️ Kirim Tugas ke Drive Guru
+          </button>
+          <p id="tugas-status" class="text-center font-heading font-bold text-sm"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: TOKO AVATAR BERUANG ==================== -->
+    <section id="tab-toko" class="tab-content hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Kamar Pas Beruang -->
+        <div class="card-kid p-6 text-center border-pink-300 shadow-[0_8px_0_#F9A8D4]">
+          <h3 class="text-xl font-extrabold text-pink-600 mb-1">🧸 Kamar Pas Beruang</h3>
+          <p class="text-xs text-slate-500 mb-3">Tampilan beruangmu otomatis tampil di papan peringkat!</p>
+          <div id="shop-bear-preview" class="w-52 h-64 mx-auto bg-gradient-to-b from-sky-100 to-emerald-100 rounded-3xl border-2 border-pink-200 flex items-center justify-center p-3 mb-3"></div>
+          <div class="bg-amber-100 text-amber-800 font-heading font-bold py-2 px-4 rounded-2xl inline-block">
+            Saldo Poinmu: ⭐ <span id="shop-poin-display">0</span>
+          </div>
+        </div>
+
+        <!-- Katalog Item (Kepala, Mata, Baju, Celana, Sepatu) -->
+        <div class="lg:col-span-2 card-kid p-6">
+          <h3 class="text-xl font-extrabold text-slate-800 mb-1">🛍️ Toko Kostum Beruang</h3>
+          <p class="text-sm text-slate-600 mb-4">Kumpulkan poin dari kuis untuk membeli ekspresi mata, baju, celana, dan sepatu keren!</p>
+          <div id="shop-items-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 6: LEADERBOARD ==================== -->
+    <section id="tab-leaderboard" class="tab-content hidden">
+      <div class="card-kid p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
+        <h3 class="text-xl md:text-2xl font-extrabold text-amber-600 mb-1">🏆 Papan Peringkat Petualang TIK</h3>
+        <p class="text-slate-600 text-sm mb-4">Diperbarui otomatis berdasarkan total poin kuis tertinggi.</p>
+        <div id="leaderboard-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // ==================== KATALOG ITEM AVATAR BERUANG ====================
+    const BEAR_CATALOG = [
+      // Jenis Kepala / Bulu
+      { id: "head_brown", part: "head", name: "Kepala Beruang Madu", price: 0, color: "#92400E", muzzle: "#FDE68A" },
+      { id: "head_panda", part: "head", name: "Kepala Panda", price: 0, color: "#FFFFFF", muzzle: "#E2E8F0", isPanda: true },
+      { id: "head_polar", part: "head", name: "Kepala Beruang Kutub", price: 0, color: "#F8FAFC", muzzle: "#CBD5E1" },
+      // Mata
+      { id: "eyes_happy", part: "eyes", name: "Mata Ceria", price: 0 },
+      { id: "eyes_star", part: "eyes", name: "Mata Bintang", price: 30 },
+      { id: "eyes_glasses", part: "eyes", name: "Kacamata Pintar", price: 50 },
+      // Baju
+      { id: "shirt_tee", part: "shirt", name: "Kaus Biru Polos", price: 0, color: "#38BDF8" },
+      { id: "shirt_hoodie", part: "shirt", name: "Hoodie Oranye", price: 40, color: "#FB923C" },
+      { id: "shirt_astro", part: "shirt", name: "Baju Astronot", price: 80, color: "#6366F1" },
+      // Celana
+      { id: "pants_shorts", part: "pants", name: "Celana Pendek Abu", price: 0, color: "#475569" },
+      { id: "pants_jeans", part: "pants", name: "Celana Jeans Biru", price: 35, color: "#1D4ED8" },
+      { id: "pants_gold", part: "pants", name: "Celana Juara Emas", price: 70, color: "#EAB308" },
+      // Sepatu
+      { id: "shoes_basic", part: "shoes", name: "Sepatu Kets Putih", price: 0, color: "#F1F5F9" },
+      { id: "shoes_red", part: "shoes", name: "Sepatu Roket Merah", price: 45, color: "#EF4444" },
+      { id: "shoes_boots", part: "shoes", name: "Sepatu Bot Hijau", price: 65, color: "#10B981" }
+    ];
+
+    // Generator SVG Beruang Modular (Kepala, Mata, Baju, Celana, Sepatu)
+    function renderBearSVG(equipped) {
+      const head = BEAR_CATALOG.find(i => i.id === equipped.head) || BEAR_CATALOG[0];
+      const shirt = BEAR_CATALOG.find(i => i.id === equipped.shirt) || BEAR_CATALOG[6];
+      const pants = BEAR_CATALOG.find(i => i.id === equipped.pants) || BEAR_CATALOG[9];
+      const shoes = BEAR_CATALOG.find(i => i.id === equipped.shoes) || BEAR_CATALOG[12];
+      const earInner = head.isPanda ? "#1E293B" : head.muzzle;
+      const earOuter = head.isPanda ? "#1E293B" : head.color;
+
+      let eyesSVG = `
+        <circle cx="82" cy="68" r="5" fill="#1E293B"/>
+        <circle cx="118" cy="68" r="5" fill="#1E293B"/>
+        <circle cx="84" cy="66" r="1.8" fill="#FFF"/>
+        <circle cx="120" cy="66" r="1.8" fill="#FFF"/>
+      `;
+      if (equipped.eyes === "eyes_star") {
+        eyesSVG = `
+          <text x="73" y="75" font-size="18">⭐</text>
+          <text x="109" y="75" font-size="18">⭐</text>
+        `;
+      } else if (equipped.eyes === "eyes_glasses") {
+        eyesSVG += `
+          <rect x="68" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
+          <rect x="106" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
+          <line x1="94" y1="67" x2="106" y2="67" stroke="#0F172A" stroke-width="3"/>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 200 240" class="w-full h-full">
+          <!-- Telinga -->
+          <circle cx="62" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/>
+          <circle cx="62" cy="36" r="9" fill="${earInner}"/>
+          <circle cx="138" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/>
+          <circle cx="138" cy="36" r="9" fill="${earInner}"/>
+
+          <!-- Tangan -->
+          <rect x="38" y="112" width="24" height="52" rx="12" fill="${head.color}" stroke="#334155" stroke-width="3"/>
+          <rect x="138" y="112" width="24" height="52" rx="12" fill="${head.color}" stroke="#334155" stroke-width="3"/>
+
+          <!-- Celana -->
+          <rect x="64" y="162" width="32" height="44" rx="8" fill="${pants.color}" stroke="#334155" stroke-width="3"/>
+          <rect x="104" y="162" width="32" height="44" rx="8" fill="${pants.color}" stroke="#334155" stroke-width="3"/>
+
+          <!-- Sepatu -->
+          <rect x="58" y="202" width="40" height="20" rx="10" fill="${shoes.color}" stroke="#334155" stroke-width="3"/>
+          <rect x="102" y="202" width="40" height="20" rx="10" fill="${shoes.color}" stroke="#334155" stroke-width="3"/>
+
+          <!-- Baju -->
+          <rect x="56" y="106" width="88" height="64" rx="18" fill="${shirt.color}" stroke="#334155" stroke-width="3"/>
+          <circle cx="100" cy="136" r="10" fill="#FFFFFF" opacity="0.4"/>
+
+          <!-- Kepala -->
+          <ellipse cx="100" cy="70" rx="46" ry="40" fill="${head.color}" stroke="#334155" stroke-width="3"/>
+          ${head.isPanda ? '<ellipse cx="82" cy="68" rx="11" ry="9" fill="#334155"/><ellipse cx="118" cy="68" rx="11" ry="9" fill="#334155"/>' : ''}
+          <!-- Moncong -->
+          <ellipse cx="100" cy="84" rx="18" ry="13" fill="${head.muzzle}"/>
+          <ellipse cx="100" cy="79" rx="7" ry="5" fill="#1E293B"/>
+          <path d="M93 88 Q100 95 107 88" fill="none" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Mata -->
+          ${eyesSVG}
+        </svg>
+      `;
+    }
+
+    // ==================== STATE SISWA (SESSION STORAGE: HILANG SAAT TAB DITUTUP, AMAN SAAT REFRESH) ====================
+    let starterHead = "head_brown";
+    let studentState = null;
+    let materiData = [...DEFAULT_BAB];
+    let kisiData = [...DEFAULT_KISIKISI];
+    let quizBank = {}; // Diisi dari Firestore atau fallback
+
+    // State Kuis Aktif (Tersimpan agar tidak hilang jika tidak sengaja pindah menu)
+    let activeQuiz = {
+      babId: null,
+      questions: [],
+      currentIndex: 0,
+      sessionScore: 0,
+      answeredCurrent: false
+    };
+
+    function selectStarterBear(type) {
+      starterHead = "head_" + type;
+      ["brown", "panda", "polar"].forEach(t => {
+        const el = document.getElementById("bear-opt-" + t);
+        el.className = t === type
+          ? "p-2 rounded-2xl border-2 border-amber-500 bg-amber-50 font-heading text-xs font-bold text-amber-900"
+          : "p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700";
+      });
+      updateLoginPreview();
+    }
+
+    function updateLoginPreview() {
+      document.getElementById("login-bear-preview").innerHTML = renderBearSVG({
+        head: starterHead, eyes: "eyes_happy", shirt: "shirt_tee", pants: "pants_shorts", shoes: "shoes_basic"
+      });
+    }
+
+    async function loginSiswa() {
+      const nama = document.getElementById("input-nama").value.trim();
+      const kelas = document.getElementById("input-kelas").value;
+      if (!nama) return alert("Yuk tulis nama lengkapmu dulu ya!");
+
+      const docId = (kelas + "_" + nama.toLowerCase().replace(/[^a-z0-9]/g, "_"));
+      const ref = db.collection("students").doc(docId);
+      const snap = await ref.get();
+
+      if (snap.exists) {
+        studentState = snap.data();
+      } else {
+        studentState = {
+          id: docId,
+          nama,
+          kelas,
+          points: 0,
+          ownedItems: [starterHead, "eyes_happy", "shirt_tee", "pants_shorts", "shoes_basic"],
+          equipped: { head: starterHead, eyes: "eyes_happy", shirt: "shirt_tee", pants: "pants_shorts", shoes: "shoes_basic" },
+          updatedAt: Date.now()
+        };
+        await ref.set(studentState);
+      }
+
+      // Simpan di sessionStorage (aman saat F5/refresh, otomatis terhapus saat tab ditutup)
+      sessionStorage.setItem("tik_student_session", JSON.stringify(studentState));
+      initApp();
+    }
+
+    function logoutSiswa() {
+      if (confirm("Yakin ingin keluar dari akun belajarmu?")) {
+        sessionStorage.removeItem("tik_student_session");
+        sessionStorage.removeItem("tik_active_quiz");
+        location.reload();
+      }
+    }
+
+    function initApp() {
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("app-screen").classList.remove("hidden");
+      refreshStudentUI();
+      listenRealtimeData();
+
+      // Pulihkan kuis jika sebelumnya sempat ter-refresh di tengah kuis
+      const savedQuiz = sessionStorage.getItem("tik_active_quiz");
+      if (savedQuiz) {
+        activeQuiz = JSON.parse(savedQuiz);
+        if (activeQuiz.babId) {
+          document.getElementById("quiz-active-badge").classList.remove("hidden");
+        }
+      }
+    }
+
+    function refreshStudentUI() {
+      document.getElementById("display-nama").textContent = studentState.nama;
+      document.getElementById("display-kelas").textContent = "Kelas " + studentState.kelas;
+      document.getElementById("display-poin").textContent = studentState.points;
+      document.getElementById("shop-poin-display").textContent = studentState.points;
+      const svg = renderBearSVG(studentState.equipped);
+      document.getElementById("header-bear-avatar").innerHTML = svg;
+      document.getElementById("shop-bear-preview").innerHTML = svg;
+      renderShop();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.getElementById("tab-" + tabName).classList.remove("hidden");
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.className = "nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy relative";
+      });
+      const activeBtn = document.getElementById("nav-" + tabName);
+      activeBtn.className = "nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy relative";
+
+      // Jika kembali ke tab Kuis dan ada kuis menggantung, langsung lanjutkan!
+      if (tabName === "kuis" && activeQuiz.babId) {
+        document.getElementById("quiz-selector").classList.add("hidden");
+        document.getElementById("quiz-runner").classList.remove("hidden");
+        renderCurrentQuestion();
+      }
+    }
+
+    // ==================== SINKRONISASI REAL-TIME FIRESTORE ====================
+    function listenRealtimeData() {
+      // 1. Materi & PDF dari Admin
+      db.collection("materi").orderBy("nomor").onSnapshot(snap => {
+        if (!snap.empty) {
+          materiData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+        renderMateri();
+        renderQuizBabSelector();
+      });
+
+      // 2. Kisi-Kisi dari Admin
+      db.collection("kisikisi").orderBy("no").onSnapshot(snap => {
+        if (!snap.empty) {
+          kisiData = snap.docs.map(d => d.data());
+        }
+        renderKisiKisi();
+      });
+
+      // 3. Bank Soal dari Admin
+      db.collection("soal").onSnapshot(snap => {
+        quizBank = {};
+        snap.forEach(doc => {
+          const q = { id: doc.id, ...doc.data() };
+          if (!quizBank[q.babId]) quizBank[q.babId] = [];
+          quizBank[q.babId].push(q);
+        });
+        renderQuizBabSelector();
+      });
+
+      // 4. Leaderboard Real-Time
+      db.collection("students").orderBy("points", "desc").limit(20).onSnapshot(snap => {
+        const list = document.getElementById("leaderboard-list");
+        list.innerHTML = "";
+        let rank = 1;
+        snap.forEach(doc => {
+          const s = doc.data();
+          const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
+          const isMe = s.id === studentState.id ? "border-amber-400 bg-amber-50" : "border-slate-200 bg-white";
+          list.innerHTML += `
+            <div class="flex items-center justify-between p-3 rounded-2xl border-2 ${isMe}">
+              <div class="flex items-center gap-3">
+                <span class="font-heading font-extrabold text-lg w-8 text-center">${medal}</span>
+                <div class="w-12 h-14 bg-sky-50 rounded-xl p-1">${renderBearSVG(s.equipped)}</div>
+                <div>
+                  <div class="font-heading font-bold text-slate-800">${s.nama}</div>
+                  <div class="text-xs text-slate-500">Kelas ${s.kelas}</div>
+                </div>
+              </div>
+              <div class="bg-amber-100 text-amber-800 font-heading font-extrabold px-3 py-1.5 rounded-xl text-sm">
+                ⭐ ${s.points} Poin
+              </div>
+            </div>
+          `;
+          rank++;
+        });
+      });
+    }
+
+    function renderMateri() {
+      const grid = document.getElementById("materi-grid");
+      const colors = ["border-sky-300", "border-emerald-300", "border-amber-300", "border-purple-300", "border-pink-300", "border-indigo-300"];
+      grid.innerHTML = materiData.map((bab, idx) => {
+        const pdfButtons = (bab.pdfs && bab.pdfs.length > 0)
+          ? bab.pdfs.map((p, i) => `
+              <a href="${p.downloadUrl || p.viewUrl}" target="_blank"
+                class="flex items-center justify-between bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-heading font-bold text-xs px-3 py-2 rounded-xl mt-2">
+                <span>📄 ${p.title || 'Modul PDF ' + (i + 1)}</span>
+                <span>⬇️ Unduh</span>
+              </a>
+            `).join("")
+          : `<div class="text-xs text-slate-400 italic mt-2">Belum ada file PDF diunggah guru.</div>`;
+
+        return `
+          <div class="card-kid p-5 flex flex-col justify-between ${colors[idx % colors.length]}">
+            <div>
+              <span class="inline-block bg-sky-100 text-sky-800 font-heading font-bold text-xs px-3 py-1 rounded-full mb-2">
+                Bab ${bab.nomor}
+              </span>
+              <h4 class="text-lg font-extrabold text-slate-800 mb-2">${bab.judul}</h4>
+              <p class="text-xs text-indigo-700 bg-indigo-50 p-2.5 rounded-xl mb-3"><b>Tujuan:</b> ${bab.cp}</p>
+              <p class="text-sm text-slate-700 mb-4">${bab.ringkasan}</p>
+            </div>
+            <div class="pt-3 border-t border-slate-100">
+              <div class="font-heading font-bold text-xs text-slate-600">Bahan Bacaan PDF:</div>
+              ${pdfButtons}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderKisiKisi() {
+      document.getElementById("kisikisi-tbody").innerHTML = kisiData.map(row => `
+        <tr class="hover:bg-indigo-50/50">
+          <td class="p-3 font-bold">${row.no}</td>
+          <td class="p-3">${row.tujuan}</td>
+          <td class="p-3 font-semibold text-indigo-800">${row.materi}</td>
+          <td class="p-3"><span class="bg-amber-100 text-amber-800 font-heading font-bold text-xs px-2.5 py-1 rounded-lg">${row.elemen}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    // ==================== LOGIKA KUIS (15 SOAL/BAB, STIMULUS, A-C, SIMPAN STATE) ====================
+    function renderQuizBabSelector() {
+      const container = document.getElementById("quiz-bab-list");
+      container.innerHTML = materiData.map(bab => {
+        const count = (quizBank[bab.id] || []).length;
+        return `
+          <div class="card-kid p-5 border-emerald-200 flex flex-col justify-between">
+            <div>
+              <span class="bg-emerald-100 text-emerald-800 font-heading font-bold text-xs px-3 py-1 rounded-full">Bab ${bab.nomor}</span>
+              <h4 class="font-extrabold text-lg text-slate-800 mt-2 mb-1">${bab.judul}</h4>
+              <p class="text-xs text-slate-500 mb-4">Tersedia ${count} soal berstimulus</p>
+            </div>
+            <button onclick="startQuiz('${bab.id}', 'Bab ${bab.nomor}: ${bab.judul}')"
+              class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-[0_4px_0_#059669] btn-bouncy">
+              ▶️ Mulai Kuis
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function startQuiz(babId, title) {
+      let questions = quizBank[babId] || [];
+      if (questions.length === 0) {
+        // Soal contoh otomatis jika guru belum mengisi soal di bab tersebut
+        questions = [{
+          stimulus: `Perhatikan materi ${title}. Setiap langkah kerja di komputer harus dilakukan secara berurutan dan rapi.`,
+          pertanyaan: "Apa manfaat utama merapikan file ke dalam folder di komputer?",
+          opsiA: "Membuat layar komputer menjadi lebih terang",
+          opsiB: "Memudahkan kita mencari kembali file tugas dengan cepat",
+          opsiC: "Menghapus semua file lama secara otomatis",
+          kunci: "B",
+          penjelasan: "Folder berfungsi seperti map atau laci penyimpanan agar file terkelompok rapi dan mudah ditemukan kembali."
+        }];
+      }
+
+      activeQuiz = {
+        babId,
+        title,
+        questions: questions.slice(0, 15),
+        currentIndex: 0,
+        sessionScore: 0,
+        answeredCurrent: false
+      };
+      sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
+      document.getElementById("quiz-active-badge").classList.remove("hidden");
+      document.getElementById("quiz-selector").classList.add("hidden");
+      document.getElementById("quiz-runner").classList.remove("hidden");
+      renderCurrentQuestion();
+    }
+
+    function pauseQuizToMenu() {
+      document.getElementById("quiz-runner").classList.add("hidden");
+      document.getElementById("quiz-selector").classList.remove("hidden");
+    }
+
+    function renderCurrentQuestion() {
+      const q = activeQuiz.questions[activeQuiz.currentIndex];
+      document.getElementById("quiz-bab-title").textContent = activeQuiz.title;
+      document.getElementById("quiz-q-num").textContent = activeQuiz.currentIndex + 1;
+      document.getElementById("quiz-q-total").textContent = activeQuiz.questions.length;
+      document.getElementById("quiz-session-score").textContent = activeQuiz.sessionScore;
+      document.getElementById("quiz-stimulus").textContent = q.stimulus;
+      document.getElementById("quiz-question").textContent = q.pertanyaan;
+
+      document.getElementById("quiz-feedback").classList.add("hidden");
+      document.getElementById("quiz-next-btn").classList.add("hidden");
+
+      const opts = [
+        { key: "A", text: q.opsiA },
+        { key: "B", text: q.opsiB },
+        { key: "C", text: q.opsiC }
+      ];
+
+      document.getElementById("quiz-options").innerHTML = opts.map(o => `
+        <button onclick="submitAnswer('${o.key}')" id="opt-btn-${o.key}"
+          class="w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 bg-white font-semibold flex items-center gap-3 transition">
+          <span class="w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-heading font-extrabold flex items-center justify-center shrink-0">${o.key}</span>
+          <span>${o.text}</span>
+        </button>
+      `).join("");
+    }
+
+    async function submitAnswer(chosenKey) {
+      if (activeQuiz.answeredCurrent) return;
+      activeQuiz.answeredCurrent = true;
+
+      const q = activeQuiz.questions[activeQuiz.currentIndex];
+      const isCorrect = chosenKey === q.kunci;
+
+      ["A", "B", "C"].forEach(k => {
+        const btn = document.getElementById("opt-btn-" + k);
+        btn.disabled = true;
+        if (k === q.kunci) {
+          btn.classList.add("border-emerald-500", "bg-emerald-50");
+        } else if (k === chosenKey && !isCorrect) {
+          btn.classList.add("border-rose-500", "bg-rose-50");
+        }
+      });
+
+      const fb = document.getElementById("quiz-feedback");
+      fb.classList.remove("hidden");
+
+      if (isCorrect) {
+        activeQuiz.sessionScore += 10;
+        studentState.points += 10;
+        fb.className = "rounded-2xl p-4 mb-4 border-2 border-emerald-400 bg-emerald-50 text-emerald-900";
+        document.getElementById("quiz-feedback-status").textContent = "🎉 Hebat! Jawabanmu Benar (+10 Poin)";
+        await saveStudentProgress();
+      } else {
+        fb.className = "rounded-2xl p-4 mb-4 border-2 border-amber-400 bg-amber-50 text-amber-950";
+        document.getElementById("quiz-feedback-status").textContent = "💡 Hampir Tepat! Yuk Pelajari Jawabannya:";
+      }
+
+      document.getElementById("quiz-feedback-answer").textContent = `Jawaban yang benar adalah: ${q.kunci}`;
+      document.getElementById("quiz-feedback-explanation").textContent = `Penjelasan: ${q.penjelasan}`;
+      document.getElementById("quiz-session-score").textContent = activeQuiz.sessionScore;
+      document.getElementById("quiz-next-btn").classList.remove("hidden");
+      sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
+    }
+
+    function nextQuestion() {
+      if (activeQuiz.currentIndex + 1 < activeQuiz.questions.length) {
+        activeQuiz.currentIndex++;
+        activeQuiz.answeredCurrent = false;
+        sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
+        renderCurrentQuestion();
+      } else {
+        alert(`Selamat ${studentState.nama}! Kamu menyelesaikan kuis dengan skor sesi ${activeQuiz.sessionScore} poin!`);
+        activeQuiz = { babId: null, questions: [], currentIndex: 0, sessionScore: 0, answeredCurrent: false };
+        sessionStorage.removeItem("tik_active_quiz");
+        document.getElementById("quiz-active-badge").classList.add("hidden");
+        pauseQuizToMenu();
+      }
+    }
+
+    // ==================== TOKO KOSTUM BERUANG ====================
+    function renderShop() {
+      const grid = document.getElementById("shop-items-grid");
+      const partLabel = { head: "Kepala", eyes: "Mata", shirt: "Baju", pants: "Celana", shoes: "Sepatu" };
+
+      grid.innerHTML = BEAR_CATALOG.map(item => {
+        const owned = studentState.ownedItems.includes(item.id);
+        const equipped = studentState.equipped[item.part] === item.id;
+
+        let btnHTML = "";
+        if (equipped) {
+          btnHTML = `<button disabled class="w-full py-1.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">✅ Dipakai</button>`;
+        } else if (owned) {
+          btnHTML = `<button onclick="equipItem('${item.part}', '${item.id}')" class="w-full py-1.5 rounded-xl bg-sky-500 text-white font-bold text-xs">Pakai</button>`;
+        } else {
+          btnHTML = `<button onclick="buyItem('${item.id}')" class="w-full py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs">Beli ⭐ ${item.price}</button>`;
+        }
+
+        return `
+          <div class="p-3 rounded-2xl border-2 ${equipped ? 'border-emerald-400 bg-emerald-50/40' : 'border-slate-200 bg-white'} flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] font-heading font-bold uppercase bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">${partLabel[item.part]}</span>
+              <div class="font-heading font-bold text-sm text-slate-800 mt-1 mb-2">${item.name}</div>
+            </div>
+            ${btnHTML}
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function buyItem(itemId) {
+      const item = BEAR_CATALOG.find(i => i.id === itemId);
+      if (studentState.points < item.price) {
+        return alert("Poinmu belum cukup! Yuk kerjakan kuis lagi untuk mengumpulkan poin.");
+      }
+      studentState.points -= item.price;
+      studentState.ownedItems.push(item.id);
+      studentState.equipped[item.part] = item.id;
+      await saveStudentProgress();
+    }
+
+    async function equipItem(part, itemId) {
+      studentState.equipped[part] = itemId;
+      await saveStudentProgress();
+    }
+
+    async function saveStudentProgress() {
+      studentState.updatedAt = Date.now();
+      sessionStorage.setItem("tik_student_session", JSON.stringify(studentState));
+      refreshStudentUI();
+      await db.collection("students").doc(studentState.id).set(studentState, { merge: true });
+    }
+
+    // ==================== UNGGAH TUGAS KE GOOGLE DRIVE ====================
+    function uploadTugasSiswa() {
+      const fileInput = document.getElementById("tugas-file");
+      const bab = document.getElementById("tugas-bab").value;
+      const statusEl = document.getElementById("tugas-status");
+      const btn = document.getElementById("btn-kirim-tugas");
+
+      if (!fileInput.files.length) return alert("Pilih file tugas (.doc, .docx, atau .pdf) terlebih dahulu!");
+      const file = fileInput.files[0];
+
+      btn.disabled = true;
+      statusEl.className = "text-center font-heading font-bold text-sm text-sky-600";
+      statusEl.textContent = "⏳ Sedang mengunggah tugas ke Google Drive Guru...";
+
+      const reader = new FileReader();
+      reader.onload = async function () {
+        const base64 = reader.result.split(",")[1];
+        const cleanFileName = `${studentState.kelas}_${studentState.nama}_${bab}_${file.name}`;
+
+        try {
+          const res = await fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              type: "tugas",
+              fileName: cleanFileName,
+              mimeType: file.type || "application/octet-stream",
+              base64
+            })
+          });
+          const result = await res.json();
+          if (result.status === "success") {
+            statusEl.className = "text-center font-heading font-bold text-sm text-emerald-600";
+            statusEl.textContent = "✅ Berhasil! Tugasmu sudah tersimpan rapi di Google Drive Bapak/Ibu Guru.";
+            fileInput.value = "";
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (err) {
+          statusEl.className = "text-center font-heading font-bold text-sm text-rose-600";
+          statusEl.textContent = "❌ Gagal mengunggah: " + err.message;
+        } finally {
+          btn.disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ==================== INISIALISASI SAAT HALAMAN DIBUKA ====================
+    window.addEventListener("DOMContentLoaded", () => {
+      updateLoginPreview();
+      const savedSession = sessionStorage.getItem("tik_student_session");
+      if (savedSession) {
+        studentState = JSON.parse(savedSession);
+        initApp();
+      }
+    });
+  </script>
+</body>
+</html>
