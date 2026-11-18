@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Petualangan TIK Kelas 4 SD — Avatar 3D & Kuis</title>
+  <title>Petualangan TIK Kelas 4 SD — Seru & Interaktif</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
   <style>
     body {
       font-family: 'Andika', sans-serif;
-      line-height: 1.4;
-      background: linear-gradient(135deg, #FEF9C3 0%, #E0F2FE 50%, #DCFCE7 100%);
+      line-height: 1.5;
+      background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
       min-height: 100vh;
     }
     h1, h2, h3, h4, .font-heading, button {
@@ -25,9 +25,9 @@
     }
     .card-kid {
       background: #ffffff;
-      border-radius: 1.5rem;
-      border: 3px solid #E2E8F0;
-      box-shadow: 0 8px 0 #CBD5E1;
+      border-radius: 2rem;
+      border: 4px solid #4F46E5;
+      box-shadow: 0 10px 0 #312E81;
     }
     .btn-bouncy {
       transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -36,51 +36,43 @@
       transform: translateY(4px);
       box-shadow: none !important;
     }
-    /* Animasi 3D Kepala & Mata Beruang */
-    @keyframes bearFloat {
+    @keyframes floatBear {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-6px) rotate(1deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
     }
     @keyframes blink {
       0%, 90%, 100% { transform: scaleY(1); }
       95% { transform: scaleY(0.1); }
     }
-    .avatar-3d-container {
-      animation: bearFloat 3s ease-in-out infinite;
-      transform-origin: bottom center;
-    }
-    .avatar-eyes {
-      animation: blink 4s infinite;
-      transform-origin: center;
-    }
+    .avatar-3d { animation: floatBear 3s ease-in-out infinite; transform-origin: bottom center; }
+    .avatar-eyes { animation: blink 4s infinite; transform-origin: center; }
   </style>
 </head>
-<body class="text-slate-800 pb-24 md:pb-10">
+<body class="text-slate-900 pb-24 md:pb-12">
 
-  <!-- ==================== 1. HALAMAN LOGIN SISWA ==================== -->
+  <!-- ==================== 1. LOGIN SISWA ==================== -->
   <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
-    <div class="card-kid max-w-lg w-full p-6 md:p-8 text-center border-amber-300 shadow-[0_8px_0_#FCD34D]">
-      <div class="inline-block bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-bold mb-2">
-        🐻 Petualangan TIK • Kelas 4 SD
+    <div class="card-kid max-w-lg w-full p-6 md:p-8 text-center bg-amber-50 border-amber-400 shadow-[0_10px_0_#B45309]">
+      <div class="inline-block bg-amber-200 text-amber-900 px-4 py-1.5 rounded-full text-sm font-extrabold mb-3 shadow-sm">
+        🐻 Petualangan TIK Ceria • Kelas 4 SD
       </div>
-      <h1 class="text-2xl md:text-3xl font-extrabold text-sky-600 mb-2">Halo, Petualang Digital!</h1>
-      <p class="text-slate-600 mb-5">Masukkan nama dan kelasmu, lalu pilih warna beruang 3D favoritmu sebelum mulai.</p>
+      <h1 class="text-3xl font-extrabold text-indigo-700 mb-2">Halo, Petualang Hebat!</h1>
+      <p class="text-slate-700 text-sm mb-5">⚠️ <b>Catatan Guru:</b> Gunakan nama lengkap dan kelas yang sama persis setiap kali masuk agar poinmu tidak terpisah!</p>
 
-      <!-- Preview Beruang 3D Bergerak -->
       <div class="flex justify-center mb-4">
-        <div id="login-bear-preview" class="w-40 h-48 bg-sky-50 rounded-3xl border-2 border-sky-200 flex items-center justify-center p-2 avatar-3d-container"></div>
+        <div id="login-bear-preview" class="w-40 h-48 bg-white rounded-3xl border-3 border-indigo-400 flex items-center justify-center p-2 avatar-3d shadow-inner"></div>
       </div>
 
       <div class="space-y-4 text-left">
         <div>
-          <label class="font-heading font-bold text-sm text-slate-700">Nama Lengkapmu</label>
+          <label class="font-heading font-bold text-sm text-indigo-900">Nama Lengkapmu</label>
           <input id="input-nama" type="text" placeholder="Contoh: Raka Pratama"
-            class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 focus:border-sky-500 focus:outline-none text-base" />
+            class="w-full mt-1 px-4 py-3 rounded-2xl border-3 border-indigo-300 focus:border-indigo-600 focus:outline-none text-base bg-white" />
         </div>
 
         <div>
-          <label class="font-heading font-bold text-sm text-slate-700">Pilih Kelas</label>
-          <select id="input-kelas" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 focus:border-sky-500 focus:outline-none text-base bg-white">
+          <label class="font-heading font-bold text-sm text-indigo-900">Pilih Kelas</label>
+          <select id="input-kelas" class="w-full mt-1 px-4 py-3 rounded-2xl border-3 border-indigo-300 focus:border-indigo-600 focus:outline-none text-base bg-white">
             <option value="4A">Kelas 4A</option>
             <option value="4B">Kelas 4B</option>
             <option value="4C">Kelas 4C</option>
@@ -89,26 +81,26 @@
         </div>
 
         <div>
-          <label class="font-heading font-bold text-sm text-slate-700">Pilih Warna Beruang Awal</label>
+          <label class="font-heading font-bold text-sm text-indigo-900">Warna Beruang Awal</label>
           <div class="grid grid-cols-3 gap-2 mt-1">
             <button type="button" onclick="selectStarterBear('brown')" id="bear-opt-brown"
-              class="p-2 rounded-2xl border-2 border-amber-500 bg-amber-50 font-heading text-xs font-bold text-amber-900">
+              class="p-2.5 rounded-2xl border-3 border-amber-600 bg-amber-100 font-heading text-xs font-bold text-amber-900 shadow-sm">
               🐻 Cokelat Madu
             </button>
             <button type="button" onclick="selectStarterBear('panda')" id="bear-opt-panda"
-              class="p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700">
+              class="p-2.5 rounded-2xl border-3 border-slate-300 bg-white font-heading text-xs font-bold text-slate-700">
               🐼 Panda Bambu
             </button>
             <button type="button" onclick="selectStarterBear('polar')" id="bear-opt-polar"
-              class="p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700">
+              class="p-2.5 rounded-2xl border-3 border-slate-300 bg-white font-heading text-xs font-bold text-slate-700">
               🐻‍❄️ Beruang Kutub
             </button>
           </div>
         </div>
 
         <button onclick="loginSiswa()"
-          class="w-full mt-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-lg shadow-[0_5px_0_#059669] btn-bouncy">
-          🚀 Masuk & Mulai Petualangan!
+          class="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-2xl text-lg shadow-[0_6px_0_#047857] btn-bouncy">
+          🚀 Masuk & Mulai Belajar!
         </button>
       </div>
     </div>
@@ -117,20 +109,19 @@
   <!-- ==================== 2. DASHBOARD UTAMA SISWA ==================== -->
   <div id="app-screen" class="hidden max-w-6xl mx-auto p-3 md:p-6">
     
-    <!-- Header Profil Siswa & Avatar 3D -->
-    <header class="card-kid p-4 mb-5 flex flex-wrap items-center justify-between gap-4 border-sky-300 shadow-[0_6px_0_#7DD3FC]">
-      <div class="flex items-center gap-3">
-        <div id="header-bear-avatar" class="w-16 h-20 bg-amber-50 rounded-2xl border-2 border-amber-200 flex items-center justify-center shrink-0 avatar-3d-container"></div>
+    <header class="card-kid p-4 mb-5 flex flex-wrap items-center justify-between gap-4 bg-indigo-600 text-white border-indigo-800 shadow-[0_8px_0_#312E81]">
+      <div class="flex items-center gap-4">
+        <div id="header-bear-avatar" class="w-16 h-20 bg-amber-100 rounded-2xl border-3 border-amber-400 flex items-center justify-center shrink-0 avatar-3d shadow-md"></div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
-            <h2 id="display-nama" class="text-lg md:text-xl font-extrabold text-slate-800">Nama Siswa</h2>
-            <span id="display-kelas" class="bg-sky-100 text-sky-700 font-heading text-xs font-bold px-2.5 py-0.5 rounded-full">4A</span>
+            <h2 id="display-nama" class="text-xl font-extrabold">Nama Siswa</h2>
+            <span id="display-kelas" class="bg-amber-400 text-slate-900 font-heading text-xs font-extrabold px-3 py-0.5 rounded-full">4A</span>
           </div>
-          <div class="flex items-center gap-3 mt-1">
-            <span class="bg-amber-100 text-amber-800 font-heading font-bold text-sm px-3 py-1 rounded-xl">
+          <div class="flex items-center gap-3 mt-1.5">
+            <span class="bg-amber-300 text-slate-900 font-heading font-extrabold text-sm px-3 py-1 rounded-xl shadow-sm">
               ⭐ Poin Kuis: <span id="display-poin">0</span>
             </span>
-            <button onclick="switchTab('toko')" class="text-xs font-heading font-bold text-pink-600 underline">
+            <button onclick="switchTab('toko')" class="text-xs font-heading font-bold text-amber-200 underline hover:text-white">
               🛍️ Toko Kostum 3D
             </button>
           </div>
@@ -138,82 +129,87 @@
       </div>
 
       <button onclick="logoutSiswa()"
-        class="bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl shadow-[0_4px_0_#BE123C] btn-bouncy">
+        class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm px-4 py-2.5 rounded-xl shadow-[0_4px_0_#9F1239] btn-bouncy">
         🚪 Keluar
       </button>
     </header>
 
-    <!-- Navigasi Menu Utama -->
+    <!-- Navigasi Menu -->
     <nav class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
-      <button onclick="switchTab('materi')" id="nav-materi" class="nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy">
+      <button onclick="switchTab('materi')" id="nav-materi" class="nav-btn bg-indigo-600 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#312E81] btn-bouncy">
         📚 Materi
       </button>
-      <button onclick="switchTab('kuis')" id="nav-kuis" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy relative">
-        🎯 Kuis <span id="quiz-active-badge" class="hidden absolute -top-2 -right-1 bg-amber-400 text-slate-900 text-[10px] px-2 py-0.5 rounded-full">Lanjut!</span>
+      <button onclick="switchTab('kuis')" id="nav-kuis" class="nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy relative">
+        🎯 Kuis <span id="quiz-active-badge" class="hidden absolute -top-2 -right-1 bg-amber-400 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold">Lanjut!</span>
       </button>
-      <button onclick="switchTab('kisikisi')" id="nav-kisikisi" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+      <button onclick="switchTab('kisikisi')" id="nav-kisikisi" class="nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy">
         📋 Kisi-Kisi
       </button>
-      <button onclick="switchTab('tugas')" id="nav-tugas" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+      <button onclick="switchTab('tugas')" id="nav-tugas" class="nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy">
         📤 Kumpul Tugas
       </button>
-      <button onclick="switchTab('toko')" id="nav-toko" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+      <button onclick="switchTab('toko')" id="nav-toko" class="nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy">
         🛍️ Toko Kostum
       </button>
-      <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy">
+      <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy">
         🏆 Peringkat
       </button>
     </nav>
 
-    <!-- ==================== TAB 1: MATERI & PREVIEW PDF ==================== -->
+    <!-- ==================== TAB 1: MATERI ==================== -->
     <section id="tab-materi" class="tab-content">
       <div class="mb-4">
-        <h3 class="text-xl md:text-2xl font-extrabold text-sky-700">📚 Materi Belajar TIK (Bab 1 - 6)</h3>
-        <p class="text-slate-600 text-sm">Pilih bab materi untuk membaca ringkasan dan mengunduh modul PDF dari guru.</p>
+        <h3 class="text-2xl font-extrabold text-indigo-900">📚 Materi Pelajaran TIK (Bab 1 - 6)</h3>
+        <p class="text-slate-700 text-sm">Pilih bab untuk membaca materi lengkap sesuai format asli dari guru serta mengunduh modul PDF.</p>
       </div>
       <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
-    <!-- ==================== TAB 2: KUIS INTERAKTIF BERSTIMULUS ==================== -->
+    <!-- ==================== TAB 2: KUIS ==================== -->
     <section id="tab-kuis" class="tab-content hidden">
       <div id="quiz-selector">
-        <h3 class="text-xl md:text-2xl font-extrabold text-emerald-700 mb-1">🎯 Tantangan Kuis Berstimulus (Bab 1 - 6)</h3>
-        <p class="text-slate-600 text-sm mb-4">Setiap bab memiliki 15 soal pilihan ganda (A–C). Kumpulkan poin sebanyak-banyaknya untuk belanja baju avatar!</p>
+        <h3 class="text-2xl font-extrabold text-emerald-900 mb-1">🎯 Tantangan Kuis Berstimulus & Gambar</h3>
+        <p class="text-slate-700 text-sm mb-4">Setiap bab memiliki 15 soal. Jawab benar untuk mendapatkan poin & penjelasan instan[cite: 1]!</p>
         <div id="quiz-bab-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
 
-      <div id="quiz-runner" class="hidden card-kid p-5 md:p-7 border-emerald-300 shadow-[0_8px_0_#6EE7B7]">
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b-2 border-slate-100 mb-4">
+      <div id="quiz-runner" class="hidden card-kid p-5 md:p-7 bg-emerald-50 border-emerald-600 shadow-[0_8px_0_#065F46]">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b-2 border-emerald-200 mb-4">
           <div>
-            <span id="quiz-bab-title" class="text-xs font-heading font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Bab 1</span>
-            <h4 class="text-lg font-extrabold text-slate-800 mt-1">Soal <span id="quiz-q-num">1</span> dari <span id="quiz-q-total">15</span></h4>
+            <span id="quiz-bab-title" class="text-xs font-heading font-bold uppercase tracking-wider bg-emerald-200 text-emerald-900 px-3 py-1 rounded-full">Bab 1</span>
+            <h4 class="text-lg font-extrabold text-slate-900 mt-1">Soal <span id="quiz-q-num">1</span> dari <span id="quiz-q-total">15</span></h4>
           </div>
           <div class="flex items-center gap-2">
-            <span class="bg-amber-100 text-amber-800 font-heading font-bold text-sm px-3 py-1.5 rounded-xl">
+            <span class="bg-amber-300 text-amber-950 font-heading font-extrabold text-sm px-3 py-1.5 rounded-xl shadow-sm">
               Skor Sesi: <span id="quiz-session-score">0</span>
             </span>
-            <button onclick="pauseQuizToMenu()" class="text-xs font-heading font-bold bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl">
+            <button onclick="pauseQuizToMenu()" class="text-xs font-heading font-bold bg-white hover:bg-slate-100 px-3 py-2 rounded-xl border-2 border-slate-300">
               ⏸ Pilih Bab Lain
             </button>
           </div>
         </div>
 
-        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 mb-4">
-          <div class="text-xs font-heading font-bold text-sky-700 mb-1">📖 Bacalah Stimulus Berikut:</div>
-          <p id="quiz-stimulus" class="text-slate-800 text-base"></p>
+        <!-- Stimulus & Gambar Soal -->
+        <div class="bg-white border-3 border-emerald-300 rounded-2xl p-4 mb-4 shadow-sm">
+          <div class="text-xs font-heading font-bold text-emerald-800 mb-1">📖 Stimulus Soal:</div>
+          <p id="quiz-stimulus" class="text-slate-900 text-base mb-3"></p>
+          <div id="quiz-image-container" class="hidden text-center mb-2">
+            <img id="quiz-image" src="" alt="Gambar Soal" class="max-h-64 mx-auto rounded-xl border-2 border-slate-300 shadow-md" />
+          </div>
         </div>
 
         <p id="quiz-question" class="font-heading font-bold text-lg text-slate-900 mb-4"></p>
         <div id="quiz-options" class="space-y-3 mb-4"></div>
 
-        <div id="quiz-feedback" class="hidden rounded-2xl p-4 mb-4 border-2">
+        <!-- Feedback Jawaban & Penjelasan -->
+        <div id="quiz-feedback" class="hidden rounded-2xl p-4 mb-4 border-3">
           <div id="quiz-feedback-status" class="font-heading font-extrabold text-base mb-1"></div>
           <p id="quiz-feedback-answer" class="font-bold text-sm mb-1"></p>
           <p id="quiz-feedback-explanation" class="text-sm"></p>
         </div>
 
         <div class="flex justify-end">
-          <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-3 rounded-2xl shadow-[0_4px_0_#0284C7] btn-bouncy">
+          <button id="quiz-next-btn" onclick="nextQuestion()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-2xl shadow-[0_4px_0_#312E81] btn-bouncy">
             Soal Berikutnya ➡️
           </button>
         </div>
@@ -222,35 +218,35 @@
 
     <!-- ==================== TAB 3: KISI-KISI ==================== -->
     <section id="tab-kisikisi" class="tab-content hidden">
-      <div class="card-kid p-5 md:p-6">
-        <h3 class="text-xl md:text-2xl font-extrabold text-indigo-700 mb-1">📋 Kisi-Kisi Pembelajaran TIK Kelas 4</h3>
-        <p class="text-slate-600 text-sm mb-4">Panduan tujuan pembelajaran dan materi ujian.</p>
-        <div class="overflow-x-auto">
+      <div class="card-kid p-5 md:p-6 bg-indigo-50 border-indigo-600">
+        <h3 class="text-2xl font-extrabold text-indigo-950 mb-1">📋 Kisi-Kisi Pembelajaran TIK Kelas 4</h3>
+        <p class="text-slate-700 text-sm mb-4">Panduan lengkap materi dan tujuan pembelajaran.</p>
+        <div class="overflow-x-auto bg-white rounded-2xl border-2 border-indigo-200 p-2">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-indigo-100 text-indigo-900 font-heading text-sm">
-                <th class="p-3 rounded-tl-xl">No</th>
+              <tr class="bg-indigo-200 text-indigo-950 font-heading text-sm">
+                <th class="p-3 rounded-l-xl">No</th>
                 <th class="p-3">Tujuan Pembelajaran</th>
                 <th class="p-3">Materi Pokok</th>
-                <th class="p-3 rounded-tr-xl">Elemen</th>
+                <th class="p-3 rounded-r-xl">Elemen</th>
               </tr>
             </thead>
-            <tbody id="kisikisi-tbody" class="divide-y divide-slate-200 text-sm md:text-base"></tbody>
+            <tbody id="kisikisi-tbody" class="divide-y divide-slate-200 text-sm"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ==================== TAB 4: KUMPUL TUGAS GOOGLE DRIVE ==================== -->
+    <!-- ==================== TAB 4: KUMPUL TUGAS ==================== -->
     <section id="tab-tugas" class="tab-content hidden">
-      <div class="card-kid max-w-2xl mx-auto p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
-        <h3 class="text-xl md:text-2xl font-extrabold text-amber-700 mb-1">📤 Kumpul Tugas Digital</h3>
-        <p class="text-slate-600 text-sm mb-5">Unggah hasil tugasmu (.doc, .docx, .pdf) langsung ke Google Drive guru tanpa perlu login Google!</p>
+      <div class="card-kid max-w-2xl mx-auto p-6 bg-amber-50 border-amber-500 shadow-[0_8px_0_#D97706]">
+        <h3 class="text-2xl font-extrabold text-amber-900 mb-1">📤 Kumpul Tugas Digital</h3>
+        <p class="text-slate-700 text-sm mb-5">Unggah tugas (.doc, .docx, .pdf) langsung ke Google Drive guru tanpa login Google!</p>
 
         <div class="space-y-4">
           <div>
-            <label class="font-heading font-bold text-sm">Pilih Bab Tugas</label>
-            <select id="tugas-bab" class="w-full mt-1 px-4 py-3 rounded-2xl border-2 border-slate-300 bg-white">
+            <label class="font-heading font-bold text-sm text-amber-950">Pilih Bab Tugas</label>
+            <select id="tugas-bab" class="w-full mt-1 px-4 py-3 rounded-2xl border-3 border-amber-300 bg-white font-semibold">
               <option value="Bab 1 - Manajemen File & Folder">Bab 1 - Manajemen File & Folder</option>
               <option value="Bab 2 - Dokumen Rapi Word">Bab 2 - Dokumen Rapi Word</option>
               <option value="Bab 3 - Memperkaya Dokumen Word">Bab 3 - Memperkaya Dokumen Word</option>
@@ -261,13 +257,13 @@
           </div>
 
           <div>
-            <label class="font-heading font-bold text-sm">Pilih File (.doc, .docx, .pdf)</label>
+            <label class="font-heading font-bold text-sm text-amber-950">Pilih File Tugas (.doc, .docx, .pdf)</label>
             <input id="tugas-file" type="file" accept=".doc,.docx,.pdf"
-              class="w-full mt-1 p-3 rounded-2xl border-2 border-dashed border-sky-400 bg-sky-50 text-sm" />
+              class="w-full mt-1 p-3 rounded-2xl border-3 border-dashed border-amber-400 bg-white text-sm font-semibold" />
           </div>
 
           <button id="btn-kirim-tugas" onclick="uploadTugasSiswa()"
-            class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl shadow-[0_5px_0_#D97706] btn-bouncy">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 rounded-2xl shadow-[0_5px_0_#92400E] btn-bouncy text-lg">
             ☁️ Kirim Tugas ke Drive Guru
           </button>
           <p id="tugas-status" class="text-center font-heading font-bold text-sm"></p>
@@ -278,22 +274,20 @@
     <!-- ==================== TAB 5: TOKO KOSTUM 3D ==================== -->
     <section id="tab-toko" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Preview Karakter 3D -->
-        <div class="card-kid p-6 text-center border-pink-300 shadow-[0_8px_0_#F9A8D4]">
-          <h3 class="text-xl font-extrabold text-pink-600 mb-1">🧸 Kamar Pas Beruang 3D</h3>
-          <p class="text-xs text-slate-500 mb-3">Karakter 3D bergerak otomatis dan tampil di leaderboard!</p>
-          <div id="shop-bear-preview" class="w-52 h-64 mx-auto bg-gradient-to-b from-sky-100 to-emerald-100 rounded-3xl border-2 border-pink-200 flex items-center justify-center p-3 mb-3 avatar-3d-container"></div>
-          <div class="bg-amber-100 text-amber-800 font-heading font-bold py-2 px-4 rounded-2xl inline-block">
-            Saldo Poinmu: ⭐ <span id="shop-poin-display">0</span>
+        <div class="card-kid p-6 text-center bg-pink-50 border-pink-400 shadow-[0_8px_0_#DB2777]">
+          <h3 class="text-xl font-extrabold text-pink-700 mb-1">🧸 Kamar Pas Beruang 3D</h3>
+          <p class="text-xs text-slate-600 mb-3">Avatar bergerak hidup dan tampil di leaderboard!</p>
+          <div id="shop-bear-preview" class="w-52 h-64 mx-auto bg-white rounded-3xl border-3 border-pink-300 flex items-center justify-center p-3 mb-3 avatar-3d shadow-inner"></div>
+          <div class="bg-amber-300 text-amber-950 font-heading font-extrabold py-2 px-4 rounded-2xl inline-block shadow-sm">
+            Saldo Poin: ⭐ <span id="shop-poin-display">0</span>
           </div>
         </div>
 
-        <!-- Katalog Item Lengkap -->
-        <div class="lg:col-span-2 card-kid p-6">
+        <div class="lg:col-span-2 card-kid p-6 bg-white border-indigo-500">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <h3 class="text-xl font-extrabold text-slate-800">🛍️ Toko Kostum & Aksesoris</h3>
+            <h3 class="text-xl font-extrabold text-indigo-950">🛍️ Toko Kostum & Aksesoris</h3>
             <div id="shop-category-tabs" class="flex flex-wrap gap-1">
-              <button onclick="filterShop('all')" class="shop-cat-btn bg-sky-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl">Semua</button>
+              <button onclick="filterShop('all')" class="shop-cat-btn bg-indigo-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl">Semua</button>
               <button onclick="filterShop('eyes')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Mata</button>
               <button onclick="filterShop('mouth')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Mulut</button>
               <button onclick="filterShop('shirt')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Baju</button>
@@ -302,7 +296,7 @@
               <button onclick="filterShop('acc')" class="shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl">Aksesoris</button>
             </div>
           </div>
-          <p class="text-sm text-slate-600 mb-4">Gunakan poin kuis untuk mempercantik mata, mulut, baju, celana, topi, dan aksesoris beruangmu!</p>
+          <p class="text-sm text-slate-600 mb-4">Gunakan poin kuis untuk belanja mata, mulut, baju, celana, topi, dan aksesoris keren!</p>
           <div id="shop-items-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[450px] overflow-y-auto pr-1"></div>
         </div>
       </div>
@@ -310,193 +304,126 @@
 
     <!-- ==================== TAB 6: LEADERBOARD ==================== -->
     <section id="tab-leaderboard" class="tab-content hidden">
-      <div class="card-kid p-6 border-amber-300 shadow-[0_8px_0_#FCD34D]">
-        <h3 class="text-xl md:text-2xl font-extrabold text-amber-600 mb-1">🏆 Papan Peringkat Petualang TIK</h3>
-        <p class="text-slate-600 text-sm mb-4">Diperbarui secara real-time berdasarkan perolehan poin siswa.</p>
+      <div class="card-kid p-6 bg-amber-50 border-amber-500 shadow-[0_8px_0_#D97706]">
+        <h3 class="text-2xl font-extrabold text-amber-900 mb-1">🏆 Papan Peringkat Petualang TIK</h3>
+        <p class="text-slate-700 text-sm mb-4">Diperbarui secara real-time berdasarkan poin kuis siswa[cite: 1].</p>
         <div id="leaderboard-list" class="space-y-3"></div>
       </div>
     </section>
 
   </div>
 
-  <!-- ==================== MODAL BACA MATERI ==================== -->
-  <div id="materi-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white max-w-3xl w-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden border-4 border-sky-300">
-      <div class="bg-sky-500 text-white p-4 flex items-center justify-between">
+  <!-- ==================== MODAL BACA MATERI (FORMAT ASLI GURU) ==================== -->
+  <div id="materi-modal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white max-w-3xl w-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden border-4 border-indigo-600">
+      <div class="bg-indigo-600 text-white p-4 flex items-center justify-between">
         <div>
-          <span id="modal-bab-badge" class="bg-sky-700 text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">Bab 1</span>
-          <h3 id="modal-title" class="text-lg md:text-xl font-extrabold mt-1">Judul Materi</h3>
+          <span id="modal-bab-badge" class="bg-amber-400 text-slate-950 text-xs font-heading font-extrabold px-3 py-1 rounded-full">Bab 1</span>
+          <h3 id="modal-title" class="text-xl font-extrabold mt-1">Judul Materi</h3>
         </div>
-        <button onclick="closeMateriModal()" class="w-10 h-10 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold flex items-center justify-center text-lg">✕</button>
+        <button onclick="closeMateriModal()" class="w-10 h-10 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white font-bold flex items-center justify-center text-lg">✕</button>
       </div>
-      <div class="p-5 md:p-6 overflow-y-auto space-y-4 flex-1">
-        <div class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl">
-          <h4 class="font-heading font-bold text-indigo-900 text-sm mb-1">🎯 Tujuan Pembelajaran (Capaian Pembelajaran):</h4>
-          <p id="modal-cp" class="text-xs md:text-sm text-indigo-800"></p>
+      <div class="p-5 md:p-6 overflow-y-auto space-y-5 flex-1">
+        <div class="bg-indigo-50 border-3 border-indigo-200 p-4 rounded-2xl">
+          <h4 class="font-heading font-bold text-indigo-950 text-sm mb-1">🎯 Tujuan Pembelajaran:</h4>
+          <p id="modal-cp" class="text-sm text-indigo-900"></p>
         </div>
         <div>
-          <h4 class="font-heading font-bold text-slate-800 text-sm mb-1">📖 Ringkasan Materi:</h4>
-          <p id="modal-ringkasan" class="text-sm md:text-base text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border-2 border-slate-200"></p>
+          <h4 class="font-heading font-bold text-slate-900 text-sm mb-2">📖 Isi Materi Pembelajaran:</h4>
+          <!-- Tempat render isi materi persis seperti yang ditulis guru (dengan bold, italic, underline, bullets) -->
+          <div id="modal-isi-materi" class="text-base text-slate-800 bg-slate-50 p-5 rounded-2xl border-3 border-slate-200 space-y-3 leading-relaxed"></div>
         </div>
         <div>
-          <h4 class="font-heading font-bold text-slate-800 text-sm mb-2">📄 Dokumen Modul PDF dari Guru:</h4>
+          <h4 class="font-heading font-bold text-slate-900 text-sm mb-2">📄 Dokumen Modul PDF dari Guru:</h4>
           <div id="modal-pdf-list" class="space-y-2"></div>
         </div>
       </div>
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-        <button onclick="closeMateriModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-5 py-2.5 rounded-xl text-sm">Tutup</button>
+      <div class="p-4 bg-slate-100 border-t-2 border-slate-200 flex justify-end">
+        <button onclick="closeMateriModal()" class="bg-slate-300 hover:bg-slate-400 text-slate-900 font-bold px-6 py-2.5 rounded-xl text-sm">Tutup</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ==================== KATALOG KOSTUM 3D LENGKAP ====================
+    // Katalog Kostum 3D Beruang
     const BEAR_CATALOG = [
-      // Kepala / Jenis Bulu
       { id: "head_brown", part: "head", name: "Kepala Beruang Madu", price: 0, color: "#92400E", muzzle: "#FDE68A" },
       { id: "head_panda", part: "head", name: "Kepala Panda", price: 0, color: "#FFFFFF", muzzle: "#E2E8F0", isPanda: true },
       { id: "head_polar", part: "head", name: "Kepala Beruang Kutub", price: 0, color: "#F8FAFC", muzzle: "#CBD5E1" },
-      
-      // Mata (Bisa dibeli)
       { id: "eyes_happy", part: "eyes", name: "Mata Ceria", price: 0 },
       { id: "eyes_star", part: "eyes", name: "Mata Bintang", price: 30 },
       { id: "eyes_glasses", part: "eyes", name: "Kacamata Pintar", price: 50 },
       { id: "eyes_wink", part: "eyes", name: "Mata Mengedip", price: 40 },
-
-      // Mulut (Bisa dibeli)
       { id: "mouth_smile", part: "mouth", name: "Senyum Manis", price: 0 },
       { id: "mouth_laugh", part: "mouth", name: "Tertawa Lebar", price: 35 },
       { id: "mouth_cool", part: "mouth", name: "Senyum Keren", price: 60 },
-
-      // Baju (Bisa dibeli)
       { id: "shirt_tee", part: "shirt", name: "Kaus Biru Polos", price: 0, color: "#38BDF8" },
       { id: "shirt_hoodie", part: "shirt", name: "Hoodie Oranye", price: 40, color: "#FB923C" },
       { id: "shirt_astro", part: "shirt", name: "Baju Astronot", price: 80, color: "#6366F1" },
       { id: "shirt_super", part: "shirt", name: "Kostum Pahlawan", price: 100, color: "#EF4444" },
-
-      // Celana (Bisa dibeli)
       { id: "pants_shorts", part: "pants", name: "Celana Pendek Abu", price: 0, color: "#475569" },
       { id: "pants_jeans", part: "pants", name: "Celana Jeans Biru", price: 35, color: "#1D4ED8" },
       { id: "pants_gold", part: "pants", name: "Celana Juara Emas", price: 70, color: "#EAB308" },
-
-      // Topi (Bisa dibeli)
       { id: "hat_none", part: "hat", name: "Tanpa Topi", price: 0 },
       { id: "hat_cap", part: "hat", name: "Topi Baseball Merah", price: 45, color: "#EF4444" },
-      { id: "hat_wizard", part: "hat", name: "Topi Penyihir Sihir", price: 90, color: "#7C3AED" },
+      { id: "hat_wizard", part: "hat", name: "Topi Penyihir", price: 90, color: "#7C3AED" },
       { id: "hat_crown", part: "hat", name: "Mahkota Raja Emas", price: 150, color: "#F59E0B" },
-
-      // Aksesoris (Bisa dibeli)
       { id: "acc_none", part: "acc", name: "Tanpa Aksesoris", price: 0 },
       { id: "acc_bowtie", part: "acc", name: "Dasi Kupu-Kupu", price: 50, color: "#EC4899" },
-      { id: "acc_scarf", part: "acc", name: "Syal Hangat Pelangi", price: 75, color: "#10B981" }
+      { id: "acc_scarf", part: "acc", name: "Syal Pelangi", price: 75, color: "#10B981" }
     ];
 
-    // Generator SVG 3D Karakter Beruang Bergerak
     function renderBearSVG(equipped) {
       const head = BEAR_CATALOG.find(i => i.id === equipped.head) || BEAR_CATALOG[0];
-      const shirt = BEAR_CATALOG.find(i => i.id === equipped.shirt) || BEAR_CATALOG[9];
-      const pants = BEAR_CATALOG.find(i => i.id === equipped.pants) || BEAR_CATALOG[13];
+      const shirt = BEAR_CATALOG.find(i => i.id === equipped.shirt) || BEAR_CATALOG[10];
+      const pants = BEAR_CATALOG.find(i => i.id === equipped.pants) || BEAR_CATALOG[14];
       const hat = BEAR_CATALOG.find(i => i.id === equipped.hat) || { id: "hat_none" };
       const acc = BEAR_CATALOG.find(i => i.id === equipped.acc) || { id: "acc_none" };
       
       const earInner = head.isPanda ? "#1E293B" : head.muzzle;
       const earOuter = head.isPanda ? "#1E293B" : head.color;
 
-      // Render Mata 3D Dinamis
-      let eyesSVG = `
-        <g class="avatar-eyes">
-          <circle cx="82" cy="68" r="5" fill="#1E293B"/>
-          <circle cx="118" cy="68" r="5" fill="#1E293B"/>
-          <circle cx="84" cy="66" r="1.8" fill="#FFF"/>
-          <circle cx="120" cy="66" r="1.8" fill="#FFF"/>
-        </g>
-      `;
-      if (equipped.eyes === "eyes_star") {
-        eyesSVG = `<text x="72" y="75" font-size="18">⭐</text><text x="108" y="75" font-size="18">⭐</text>`;
-      } else if (equipped.eyes === "eyes_glasses") {
-        eyesSVG += `
-          <rect x="68" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
-          <rect x="106" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/>
-          <line x1="94" y1="67" x2="106" y2="67" stroke="#0F172A" stroke-width="3"/>
-        `;
-      } else if (equipped.eyes === "eyes_wink") {
-        eyesSVG = `
-          <circle cx="82" cy="68" r="5" fill="#1E293B"/>
-          <path d="M112 68 Q118 73 124 68" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
-        `;
-      }
+      let eyesSVG = `<g class="avatar-eyes"><circle cx="82" cy="68" r="5" fill="#1E293B"/><circle cx="118" cy="68" r="5" fill="#1E293B"/><circle cx="84" cy="66" r="1.8" fill="#FFF"/><circle cx="120" cy="66" r="1.8" fill="#FFF"/></g>`;
+      if (equipped.eyes === "eyes_star") eyesSVG = `<text x="72" y="75" font-size="18">⭐</text><text x="108" y="75" font-size="18">⭐</text>`;
+      else if (equipped.eyes === "eyes_glasses") eyesSVG += `<rect x="68" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/><rect x="106" y="58" width="26" height="18" rx="5" fill="none" stroke="#0F172A" stroke-width="3"/><line x1="94" y1="67" x2="106" y2="67" stroke="#0F172A" stroke-width="3"/>`;
+      else if (equipped.eyes === "eyes_wink") eyesSVG = `<circle cx="82" cy="68" r="5" fill="#1E293B"/><path d="M112 68 Q118 73 124 68" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>`;
 
-      // Render Mulut 3D Dinamis
       let mouthSVG = `<path d="M93 88 Q100 95 107 88" fill="none" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round"/>`;
-      if (equipped.mouth === "mouth_laugh") {
-        mouthSVG = `<path d="M90 86 Q100 102 110 86" fill="#1E293B" stroke="#1E293B" stroke-width="2"/>`;
-      } else if (equipped.mouth === "mouth_cool") {
-        mouthSVG = `<path d="M92 89 L108 89" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="94" r="3" fill="#EF4444"/>`;
-      }
+      if (equipped.mouth === "mouth_laugh") mouthSVG = `<path d="M90 86 Q100 102 110 86" fill="#1E293B" stroke="#1E293B" stroke-width="2"/>`;
+      else if (equipped.mouth === "mouth_cool") mouthSVG = `<path d="M92 89 L108 89" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="94" r="3" fill="#EF4444"/>`;
 
-      // Render Topi 3D
       let hatSVG = "";
-      if (hat.id === "hat_cap") {
-        hatSVG = `<path d="M68 35 Q100 15 132 35 L145 35 L145 42 L55 42 L55 35 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M125 38 L155 40 L155 44 L125 42 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2"/>`;
-      } else if (hat.id === "hat_wizard") {
-        hatSVG = `<polygon points="100,5 65,45 135,45" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><ellipse cx="100" cy="45" rx="38" ry="8" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
-      } else if (hat.id === "hat_crown") {
-        hatSVG = `<polygon points="72,42 78,22 88,35 100,18 112,35 122,22 128,42" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
-      }
+      if (hat.id === "hat_cap") hatSVG = `<path d="M68 35 Q100 15 132 35 L145 35 L145 42 L55 42 L55 35 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M125 38 L155 40 L155 44 L125 42 Z" fill="${hat.color}" stroke="#1E293B" stroke-width="2"/>`;
+      else if (hat.id === "hat_wizard") hatSVG = `<polygon points="100,5 65,45 135,45" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/><ellipse cx="100" cy="45" rx="38" ry="8" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
+      else if (hat.id === "hat_crown") hatSVG = `<polygon points="72,42 78,22 88,35 100,18 112,35 122,22 128,42" fill="${hat.color}" stroke="#1E293B" stroke-width="2.5"/>`;
 
-      // Render Aksesoris 3D
       let accSVG = "";
-      if (acc.id === "acc_bowtie") {
-        accSVG = `<polygon points="100,105 85,96 85,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><polygon points="100,105 115,96 115,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><circle cx="100" cy="105" r="5" fill="#1E293B"/>`;
-      } else if (acc.id === "acc_scarf") {
-        accSVG = `<path d="M72 100 Q100 112 128 100 L124 118 Q100 126 76 118 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M112 114 L120 142 L105 145 L100 116 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/>`;
-      }
+      if (acc.id === "acc_bowtie") accSVG = `<polygon points="100,105 85,96 85,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><polygon points="100,105 115,96 115,114" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/><circle cx="100" cy="105" r="5" fill="#1E293B"/>`;
+      else if (acc.id === "acc_scarf") accSVG = `<path d="M72 100 Q100 112 128 100 L124 118 Q100 126 76 118 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2.5"/><path d="M112 114 L120 142 L105 145 L100 116 Z" fill="${acc.color}" stroke="#1E293B" stroke-width="2"/>`;
 
       return `
         <svg viewBox="0 0 200 240" class="w-full h-full drop-shadow-md">
-          <!-- Telinga -->
-          <circle cx="62" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/>
-          <circle cx="62" cy="36" r="9" fill="${earInner}"/>
-          <circle cx="138" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/>
-          <circle cx="138" cy="36" r="9" fill="${earInner}"/>
-
-          <!-- Tangan -->
+          <circle cx="62" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/><circle cx="62" cy="36" r="9" fill="${earInner}"/>
+          <circle cx="138" cy="36" r="18" fill="${earOuter}" stroke="#334155" stroke-width="3"/><circle cx="138" cy="36" r="9" fill="${earInner}"/>
           <rect x="38" y="112" width="24" height="52" rx="12" fill="${head.color}" stroke="#334155" stroke-width="3"/>
           <rect x="138" y="112" width="24" height="52" rx="12" fill="${head.color}" stroke="#334155" stroke-width="3"/>
-
-          <!-- Celana -->
           <rect x="64" y="162" width="32" height="44" rx="8" fill="${pants.color}" stroke="#334155" stroke-width="3"/>
           <rect x="104" y="162" width="32" height="44" rx="8" fill="${pants.color}" stroke="#334155" stroke-width="3"/>
-
-          <!-- Sepatu -->
           <rect x="58" y="202" width="40" height="20" rx="10" fill="#F1F5F9" stroke="#334155" stroke-width="3"/>
           <rect x="102" y="202" width="40" height="20" rx="10" fill="#F1F5F9" stroke="#334155" stroke-width="3"/>
-
-          <!-- Baju -->
-          <rect x="56" y="106" width="88" height="64" rx="18" fill="${shirt.color}" stroke="#334155" stroke-width="3"/>
-          <circle cx="100" cy="136" r="10" fill="#FFFFFF" opacity="0.4"/>
-
-          <!-- Aksesoris Dada -->
+          <rect x="56" y="106" width="88" height="64" rx="18" fill="${shirt.color}" stroke="#334155" stroke-width="3"/><circle cx="100" cy="136" r="10" fill="#FFFFFF" opacity="0.4"/>
           ${accSVG}
-
-          <!-- Kepala (Bergeser sedikit untuk efek 3D hidup) -->
           <g>
             <ellipse cx="100" cy="70" rx="46" ry="40" fill="${head.color}" stroke="#334155" stroke-width="3"/>
             ${head.isPanda ? '<ellipse cx="82" cy="68" rx="11" ry="9" fill="#334155"/><ellipse cx="118" cy="68" rx="11" ry="9" fill="#334155"/>' : ''}
-            <!-- Moncong -->
-            <ellipse cx="100" cy="84" rx="18" ry="13" fill="${head.muzzle}"/>
-            <ellipse cx="100" cy="79" rx="7" ry="5" fill="#1E293B"/>
-            ${mouthSVG}
-            ${eyesSVG}
+            <ellipse cx="100" cy="84" rx="18" ry="13" fill="${head.muzzle}"/><ellipse cx="100" cy="79" rx="7" ry="5" fill="#1E293B"/>
+            ${mouthSVG}${eyesSVG}
           </g>
-
-          <!-- Topi -->
           ${hatSVG}
         </svg>
       `;
     }
 
-    // ==================== STATE APLIKASI ====================
     let starterHead = "head_brown";
     let studentState = null;
     let materiData = [];
@@ -504,29 +431,19 @@
     let quizBank = {};
     let currentShopFilter = "all";
 
-    let activeQuiz = {
-      babId: null,
-      questions: [],
-      currentIndex: 0,
-      sessionScore: 0,
-      answeredCurrent: false
-    };
+    let activeQuiz = { babId: null, questions: [], currentIndex: 0, sessionScore: 0, answeredCurrent: false };
 
     function selectStarterBear(type) {
       starterHead = "head_" + type;
       ["brown", "panda", "polar"].forEach(t => {
         const el = document.getElementById("bear-opt-" + t);
-        el.className = t === type
-          ? "p-2 rounded-2xl border-2 border-amber-500 bg-amber-50 font-heading text-xs font-bold text-amber-900"
-          : "p-2 rounded-2xl border-2 border-slate-200 bg-white font-heading text-xs font-bold text-slate-700";
+        el.className = t === type ? "p-2.5 rounded-2xl border-3 border-amber-600 bg-amber-100 font-heading text-xs font-bold text-amber-900 shadow-sm" : "p-2.5 rounded-2xl border-3 border-slate-300 bg-white font-heading text-xs font-bold text-slate-700";
       });
       updateLoginPreview();
     }
 
     function updateLoginPreview() {
-      document.getElementById("login-bear-preview").innerHTML = renderBearSVG({
-        head: starterHead, eyes: "eyes_happy", mouth: "mouth_smile", shirt: "shirt_tee", pants: "pants_shorts", hat: "hat_none", acc: "acc_none"
-      });
+      document.getElementById("login-bear-preview").innerHTML = renderBearSVG({ head: starterHead, eyes: "eyes_happy", mouth: "mouth_smile", shirt: "shirt_tee", pants: "pants_shorts", hat: "hat_none", acc: "acc_none" });
     }
 
     async function loginSiswa() {
@@ -542,17 +459,13 @@
         studentState = snap.data();
       } else {
         studentState = {
-          id: docId,
-          nama,
-          kelas,
-          points: 0,
+          id: docId, nama, kelas, points: 0,
           ownedItems: [starterHead, "eyes_happy", "mouth_smile", "shirt_tee", "pants_shorts", "hat_none", "acc_none"],
           equipped: { head: starterHead, eyes: "eyes_happy", mouth: "mouth_smile", shirt: "shirt_tee", pants: "pants_shorts", hat: "hat_none", acc: "acc_none" },
           updatedAt: Date.now()
         };
         await ref.set(studentState);
       }
-
       sessionStorage.setItem("tik_student_session", JSON.stringify(studentState));
       initApp();
     }
@@ -574,9 +487,7 @@
       const savedQuiz = sessionStorage.getItem("tik_active_quiz");
       if (savedQuiz) {
         activeQuiz = JSON.parse(savedQuiz);
-        if (activeQuiz.babId) {
-          document.getElementById("quiz-active-badge").classList.remove("hidden");
-        }
+        if (activeQuiz.babId) document.getElementById("quiz-active-badge").classList.remove("hidden");
       }
     }
 
@@ -596,9 +507,9 @@
       document.getElementById("tab-" + tabName).classList.remove("hidden");
 
       document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.className = "nav-btn bg-white text-slate-700 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-2 border-slate-200 btn-bouncy relative";
+        btn.className = "nav-btn bg-white text-slate-800 font-bold py-3 px-2 rounded-2xl text-xs md:text-sm border-3 border-indigo-400 btn-bouncy relative";
       });
-      document.getElementById("nav-" + tabName).className = "nav-btn bg-sky-500 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#0284C7] btn-bouncy relative";
+      document.getElementById("nav-" + tabName).className = "nav-btn bg-indigo-600 text-white font-bold py-3 px-2 rounded-2xl text-xs md:text-sm shadow-[0_4px_0_#312E81] btn-bouncy relative";
 
       if (tabName === "kuis" && activeQuiz.babId) {
         document.getElementById("quiz-selector").classList.add("hidden");
@@ -607,7 +518,6 @@
       }
     }
 
-    // ==================== FIRESTORE LISTENERS ====================
     function listenRealtimeData() {
       db.collection("materi").orderBy("nomor").onSnapshot(snap => {
         materiData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -637,18 +547,18 @@
         snap.forEach(doc => {
           const s = doc.data();
           const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
-          const isMe = s.id === studentState.id ? "border-amber-400 bg-amber-50" : "border-slate-200 bg-white";
+          const isMe = s.id === studentState.id ? "border-amber-500 bg-amber-100" : "border-indigo-200 bg-white";
           list.innerHTML += `
-            <div class="flex items-center justify-between p-3 rounded-2xl border-2 ${isMe}">
+            <div class="flex items-center justify-between p-3.5 rounded-2xl border-3 ${isMe}">
               <div class="flex items-center gap-3">
                 <span class="font-heading font-extrabold text-lg w-8 text-center">${medal}</span>
-                <div class="w-12 h-14 bg-sky-50 rounded-xl p-1 avatar-3d-container">${renderBearSVG(s.equipped)}</div>
+                <div class="w-12 h-14 bg-indigo-50 rounded-xl p-1 avatar-3d">${renderBearSVG(s.equipped)}</div>
                 <div>
-                  <div class="font-heading font-bold text-slate-800">${s.nama}</div>
-                  <div class="text-xs text-slate-500">Kelas ${s.kelas}</div>
+                  <div class="font-heading font-extrabold text-slate-900">${s.nama}</div>
+                  <div class="text-xs text-slate-600 font-bold">Kelas ${s.kelas}</div>
                 </div>
               </div>
-              <div class="bg-amber-100 text-amber-800 font-heading font-extrabold px-3 py-1.5 rounded-xl text-sm">
+              <div class="bg-amber-300 text-amber-950 font-heading font-extrabold px-3.5 py-1.5 rounded-xl text-sm shadow-sm">
                 ⭐ ${s.points} Poin
               </div>
             </div>
@@ -658,23 +568,22 @@
       });
     }
 
-    // ==================== RENDER MATERI & MODAL ====================
     function renderMateri() {
       const grid = document.getElementById("materi-grid");
-      const colors = ["border-sky-300", "border-emerald-300", "border-amber-300", "border-purple-300", "border-pink-300", "border-indigo-300"];
+      const colors = ["border-indigo-500", "border-emerald-500", "border-amber-500", "border-purple-500", "border-pink-500", "border-blue-500"];
       grid.innerHTML = materiData.map((bab, idx) => `
-        <div class="card-kid p-5 flex flex-col justify-between ${colors[idx % colors.length]}">
+        <div class="card-kid p-5 flex flex-col justify-between bg-white ${colors[idx % colors.length]}">
           <div>
-            <span class="inline-block bg-sky-100 text-sky-800 font-heading font-bold text-xs px-3 py-1 rounded-full mb-2">Bab ${bab.nomor}</span>
-            <h4 class="text-lg font-extrabold text-slate-800 mb-2">${bab.judul}</h4>
-            <p class="text-xs text-indigo-700 bg-indigo-50 p-2.5 rounded-xl mb-3 line-clamp-2"><b>Tujuan:</b> ${bab.cp}</p>
-            <p class="text-sm text-slate-700 mb-4 line-clamp-3">${bab.ringkasan}</p>
+            <span class="inline-block bg-indigo-100 text-indigo-900 font-heading font-bold text-xs px-3 py-1 rounded-full mb-2">Bab ${bab.nomor}</span>
+            <h4 class="text-lg font-extrabold text-slate-900 mb-2">${bab.judul}</h4>
+            <p class="text-xs text-indigo-900 bg-indigo-50 p-2.5 rounded-xl mb-3 line-clamp-2"><b>Tujuan:</b> ${bab.cp}</p>
+            <div class="text-xs text-slate-700 mb-4 line-clamp-3 bg-slate-50 p-3 rounded-xl border border-slate-200">${bab.isiHtml || bab.ringkasan}</div>
           </div>
-          <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
-            <button onclick="openMateriModal('${bab.id}')" class="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-[0_3px_0_#0284C7] btn-bouncy flex items-center justify-center gap-1">
+          <div class="pt-3 border-t-2 border-slate-100 flex items-center gap-2">
+            <button onclick="openMateriModal('${bab.id}')" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-[0_3px_0_#312E81] btn-bouncy flex items-center justify-center gap-1">
               📖 Baca Materi
             </button>
-            <span class="text-xs font-heading font-bold text-slate-500 bg-slate-100 px-2.5 py-2 rounded-xl">📄 ${bab.pdfs ? bab.pdfs.length : 0} PDF</span>
+            <span class="text-xs font-heading font-bold text-slate-700 bg-slate-200 px-2.5 py-2 rounded-xl">📄 ${bab.pdfs ? bab.pdfs.length : 0} PDF</span>
           </div>
         </div>
       `).join("");
@@ -686,21 +595,22 @@
       document.getElementById("modal-bab-badge").textContent = "Bab " + bab.nomor;
       document.getElementById("modal-title").textContent = bab.judul;
       document.getElementById("modal-cp").textContent = bab.cp;
-      document.getElementById("modal-ringkasan").textContent = bab.ringkasan;
+      // Menampilkan isi HTML asli persis seperti yang ditulis guru di editor
+      document.getElementById("modal-isi-materi").innerHTML = bab.isiHtml || `<p>${bab.ringkasan}</p>`;
 
       const pdfListEl = document.getElementById("modal-pdf-list");
       if (bab.pdfs && bab.pdfs.length > 0) {
         pdfListEl.innerHTML = bab.pdfs.map((p, i) => `
-          <div class="flex items-center justify-between bg-sky-50 border-2 border-sky-200 p-3 rounded-2xl">
-            <span class="font-heading font-bold text-xs text-slate-800">📄 ${p.title || 'Modul PDF ' + (i + 1)}</span>
+          <div class="flex items-center justify-between bg-indigo-50 border-2 border-indigo-200 p-3 rounded-2xl">
+            <span class="font-heading font-bold text-xs text-slate-900">📄 ${p.title || 'Modul PDF ' + (i + 1)}</span>
             <div class="flex gap-2">
-              <a href="${p.viewUrl}" target="_blank" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl">👁️ Buka</a>
+              <a href="${p.viewUrl}" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl">👁️ Buka</a>
               <a href="${p.downloadUrl || p.viewUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl">⬇️ Unduh</a>
             </div>
           </div>
         `).join("");
       } else {
-        pdfListEl.innerHTML = `<p class="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl">Belum ada file PDF diunggah guru.</p>`;
+        pdfListEl.innerHTML = `<p class="text-xs text-slate-500 italic bg-slate-50 p-3 rounded-xl">Belum ada file PDF diunggah guru.</p>`;
       }
       document.getElementById("materi-modal").classList.remove("hidden");
     }
@@ -709,20 +619,19 @@
       document.getElementById("materi-modal").classList.add("hidden");
     }
 
-    // ==================== KUIS & KISI-KISI ====================
     function renderQuizBabSelector() {
       const container = document.getElementById("quiz-bab-list");
       container.innerHTML = materiData.map(bab => {
         const count = (quizBank[bab.id] || []).length;
         return `
-          <div class="card-kid p-5 border-emerald-200 flex flex-col justify-between">
+          <div class="card-kid p-5 bg-white border-emerald-500 flex flex-col justify-between">
             <div>
-              <span class="bg-emerald-100 text-emerald-800 font-heading font-bold text-xs px-3 py-1 rounded-full">Bab ${bab.nomor}</span>
-              <h4 class="font-extrabold text-lg text-slate-800 mt-2 mb-1">${bab.judul}</h4>
-              <p class="text-xs text-slate-500 mb-4">Tersedia ${count} soal berstimulus</p>
+              <span class="bg-emerald-200 text-emerald-950 font-heading font-bold text-xs px-3 py-1 rounded-full">Bab ${bab.nomor}</span>
+              <h4 class="font-extrabold text-lg text-slate-900 mt-2 mb-1">${bab.judul}</h4>
+              <p class="text-xs text-slate-600 mb-4 font-semibold">Tersedia ${count} soal berstimulus & gambar</p>
             </div>
             <button onclick="startQuiz('${bab.id}', 'Bab ${bab.nomor}: ${bab.judul}')"
-              class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-[0_4px_0_#059669] btn-bouncy">
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-[0_4px_0_#065F46] btn-bouncy">
               ▶️ Mulai Kuis
             </button>
           </div>
@@ -734,24 +643,17 @@
       let questions = quizBank[babId] || [];
       if (questions.length === 0) {
         questions = [{
-          stimulus: `Perhatikan materi ${title}. Pengelolaan komputer dan file harus dilakukan secara runtut.`,
-          pertanyaan: "Apa manfaat utama mengelompokkan file ke dalam folder?",
-          opsiA: "Membuat komputer cepat rusak",
-          opsiB: "Memudahkan pencarian file dengan cepat",
-          opsiC: "Menghapus tugas lama secara otomatis",
+          stimulus: `Perhatikan materi ${title}. Setiap pengelolaan perangkat harus dilakukan secara runtut.`,
+          pertanyaan: "Apa fungsi utama folder di komputer?",
+          opsiA: "Membuat layar monitor terang",
+          opsiB: "Menyimpan dan mengelompokkan file agar rapi",
+          opsiC: "Menghapus data otomatis",
           kunci: "B",
-          penjelasan: "Folder berfungsi seperti map laci agar file tersusun rapi dan mudah ditemukan."
+          penjelasan: "Folder bagaikan laci penyimpanan yang membuat file mudah dicari."
         }];
       }
 
-      activeQuiz = {
-        babId,
-        title,
-        questions: questions.slice(0, 15),
-        currentIndex: 0,
-        sessionScore: 0,
-        answeredCurrent: false
-      };
+      activeQuiz = { babId, title, questions: questions.slice(0, 15), currentIndex: 0, sessionScore: 0, answeredCurrent: false };
       sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
       document.getElementById("quiz-active-badge").classList.remove("hidden");
       document.getElementById("quiz-selector").classList.add("hidden");
@@ -771,16 +673,26 @@
       document.getElementById("quiz-q-total").textContent = activeQuiz.questions.length;
       document.getElementById("quiz-session-score").textContent = activeQuiz.sessionScore;
       document.getElementById("quiz-stimulus").textContent = q.stimulus;
-      document.getElementById("quiz-question").textContent = q.pertanyaan;
 
+      // Render Gambar Soal jika ada
+      const imgContainer = document.getElementById("quiz-image-container");
+      const imgEl = document.getElementById("quiz-image");
+      if (q.imageUrl) {
+        imgEl.src = q.imageUrl;
+        imgContainer.classList.remove("hidden");
+      } else {
+        imgContainer.classList.add("hidden");
+      }
+
+      document.getElementById("quiz-question").textContent = q.pertanyaan;
       document.getElementById("quiz-feedback").classList.add("hidden");
       document.getElementById("quiz-next-btn").classList.add("hidden");
 
       const opts = [{ key: "A", text: q.opsiA }, { key: "B", text: q.opsiB }, { key: "C", text: q.opsiC }];
       document.getElementById("quiz-options").innerHTML = opts.map(o => `
         <button onclick="submitAnswer('${o.key}')" id="opt-btn-${o.key}"
-          class="w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-sky-400 bg-white font-semibold flex items-center gap-3 transition">
-          <span class="w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-heading font-extrabold flex items-center justify-center shrink-0">${o.key}</span>
+          class="w-full text-left p-4 rounded-2xl border-3 border-indigo-200 hover:border-indigo-600 bg-white font-semibold flex items-center gap-3 transition shadow-sm">
+          <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-heading font-extrabold flex items-center justify-center shrink-0">${o.key}</span>
           <span>${o.text}</span>
         </button>
       `).join("");
@@ -796,8 +708,8 @@
       ["A", "B", "C"].forEach(k => {
         const btn = document.getElementById("opt-btn-" + k);
         btn.disabled = true;
-        if (k === q.kunci) btn.classList.add("border-emerald-500", "bg-emerald-50");
-        else if (k === chosenKey && !isCorrect) btn.classList.add("border-rose-500", "bg-rose-50");
+        if (k === q.kunci) btn.classList.add("border-emerald-600", "bg-emerald-100");
+        else if (k === chosenKey && !isCorrect) btn.classList.add("border-rose-600", "bg-rose-100");
       });
 
       const fb = document.getElementById("quiz-feedback");
@@ -806,16 +718,16 @@
       if (isCorrect) {
         activeQuiz.sessionScore += 10;
         studentState.points += 10;
-        fb.className = "rounded-2xl p-4 mb-4 border-2 border-emerald-400 bg-emerald-50 text-emerald-900";
-        document.getElementById("quiz-feedback-status").textContent = "🎉 Hebat! Jawaban Benar (+10 Poin)";
+        fb.className = "rounded-2xl p-4 mb-4 border-3 border-emerald-500 bg-emerald-100 text-emerald-950 shadow-sm";
+        document.getElementById("quiz-feedback-status").textContent = "🎉 Luar Biasa! Jawaban Benar (+10 Poin)[cite: 1]";
         await saveStudentProgress();
       } else {
-        fb.className = "rounded-2xl p-4 mb-4 border-2 border-amber-400 bg-amber-50 text-amber-950";
-        document.getElementById("quiz-feedback-status").textContent = "💡 Hampir Tepat! Yuk Pelajari Jawabannya:";
+        fb.className = "rounded-2xl p-4 mb-4 border-3 border-amber-500 bg-amber-100 text-amber-950 shadow-sm";
+        document.getElementById("quiz-feedback-status").textContent = "💡 Hampir Tepat! Yuk Pelajari Penjelasannya[cite: 1]:";
       }
 
       document.getElementById("quiz-feedback-answer").textContent = `Jawaban Benar: ${q.kunci}`;
-      document.getElementById("quiz-feedback-explanation").textContent = `Penjelasan: ${q.penjelasan}`;
+      document.getElementById("quiz-feedback-explanation").textContent = `Penjelasan: ${q.penjelasan || "Belajar dengan tekun membuatmu semakin pintar!"}`;
       document.getElementById("quiz-session-score").textContent = activeQuiz.sessionScore;
       document.getElementById("quiz-next-btn").classList.remove("hidden");
       sessionStorage.setItem("tik_active_quiz", JSON.stringify(activeQuiz));
@@ -838,29 +750,27 @@
 
     function renderKisiKisi() {
       document.getElementById("kisikisi-tbody").innerHTML = kisiData.map(row => `
-        <tr class="hover:bg-indigo-50/50">
+        <tr class="hover:bg-indigo-50">
           <td class="p-3 font-bold">${row.no}</td>
-          <td class="p-3">${row.tujuan}</td>
-          <td class="p-3 font-semibold text-indigo-800">${row.materi}</td>
-          <td class="p-3"><span class="bg-amber-100 text-amber-800 font-heading font-bold text-xs px-2.5 py-1 rounded-lg">${row.elemen}</span></td>
+          <td class="p-3 text-slate-900">${row.tujuan}</td>
+          <td class="p-3 font-semibold text-indigo-900">${row.materi}</td>
+          <td class="p-3"><span class="bg-amber-300 text-amber-950 font-heading font-extrabold text-xs px-2.5 py-1 rounded-lg">${row.elemen}</span></td>
         </tr>
       `).join("");
     }
 
-    // ==================== TOKO KOSTUM 3D ====================
     function filterShop(cat) {
       currentShopFilter = cat;
       document.querySelectorAll(".shop-cat-btn").forEach(btn => {
         btn.className = "shop-cat-btn bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1.5 rounded-xl";
       });
-      event.target.className = "shop-cat-btn bg-sky-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl";
+      event.target.className = "shop-cat-btn bg-indigo-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl";
       renderShop();
     }
 
     function renderShop() {
       const grid = document.getElementById("shop-items-grid");
       const partLabel = { head: "Kepala", eyes: "Mata", mouth: "Mulut", shirt: "Baju", pants: "Celana", hat: "Topi", acc: "Aksesoris" };
-
       const filtered = currentShopFilter === "all" ? BEAR_CATALOG : BEAR_CATALOG.filter(i => i.part === currentShopFilter);
 
       grid.innerHTML = filtered.map(item => {
@@ -868,19 +778,15 @@
         const equipped = studentState.equipped[item.part] === item.id;
 
         let btnHTML = "";
-        if (equipped) {
-          btnHTML = `<button disabled class="w-full py-1.5 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">✅ Dipakai</button>`;
-        } else if (owned) {
-          btnHTML = `<button onclick="equipItem('${item.part}', '${item.id}')" class="w-full py-1.5 rounded-xl bg-sky-500 text-white font-bold text-xs">Pakai</button>`;
-        } else {
-          btnHTML = `<button onclick="buyItem('${item.id}')" class="w-full py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs">Beli ⭐ ${item.price}</button>`;
-        }
+        if (equipped) btnHTML = `<button disabled class="w-full py-2 rounded-xl bg-emerald-200 text-emerald-900 font-extrabold text-xs">✅ Dipakai</button>`;
+        else if (owned) btnHTML = `<button onclick="equipItem('${item.part}', '${item.id}')" class="w-full py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs">Pakai</button>`;
+        else btnHTML = `<button onclick="buyItem('${item.id}')" class="w-full py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs shadow-sm">Beli ⭐ ${item.price}</button>`;
 
         return `
-          <div class="p-3 rounded-2xl border-2 ${equipped ? 'border-emerald-400 bg-emerald-50/40' : 'border-slate-200 bg-white'} flex flex-col justify-between">
+          <div class="p-3 rounded-2xl border-3 ${equipped ? 'border-emerald-500 bg-emerald-50' : 'border-indigo-100 bg-white'} flex flex-col justify-between shadow-sm">
             <div>
-              <span class="text-[10px] font-heading font-bold uppercase bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">${partLabel[item.part]}</span>
-              <div class="font-heading font-bold text-sm text-slate-800 mt-1 mb-2">${item.name}</div>
+              <span class="text-[10px] font-heading font-extrabold uppercase bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded-full">${partLabel[item.part]}</span>
+              <div class="font-heading font-extrabold text-sm text-slate-900 mt-1.5 mb-2">${item.name}</div>
             </div>
             ${btnHTML}
           </div>
@@ -890,7 +796,7 @@
 
     async function buyItem(itemId) {
       const item = BEAR_CATALOG.find(i => i.id === itemId);
-      if (studentState.points < item.price) return alert("Poin kuis belum cukup! Yuk kerjakan kuis lagi.");
+      if (studentState.points < item.price) return alert("Poin kuis belum cukup! Yuk kerjakan kuis lagi[cite: 1].");
       studentState.points -= item.price;
       studentState.ownedItems.push(item.id);
       studentState.equipped[item.part] = item.id;
@@ -909,7 +815,6 @@
       await db.collection("students").doc(studentState.id).set(studentState, { merge: true });
     }
 
-    // ==================== UNGGAH TUGAS GOOGLE DRIVE ====================
     function uploadTugasSiswa() {
       const fileInput = document.getElementById("tugas-file");
       const bab = document.getElementById("tugas-bab").value;
@@ -920,14 +825,13 @@
       const file = fileInput.files[0];
 
       btn.disabled = true;
-      statusEl.className = "text-center font-heading font-bold text-sm text-sky-600";
+      statusEl.className = "text-center font-heading font-bold text-sm text-indigo-700";
       statusEl.textContent = "⏳ Sedang mengunggah tugas ke Google Drive Guru...";
 
       const reader = new FileReader();
       reader.onload = async function () {
         const base64 = reader.result.split(",")[1];
         const cleanFileName = `${studentState.kelas}_${studentState.nama}_${bab}_${file.name}`;
-
         try {
           const res = await fetch(GAS_WEB_APP_URL, {
             method: "POST",
@@ -935,18 +839,14 @@
           });
           const result = await res.json();
           if (result.status === "success") {
-            statusEl.className = "text-center font-heading font-bold text-sm text-emerald-600";
+            statusEl.className = "text-center font-heading font-bold text-sm text-emerald-700";
             statusEl.textContent = "✅ Berhasil! Tugasmu tersimpan rapi di Google Drive Guru.";
             fileInput.value = "";
-          } else {
-            throw new Error(result.message);
-          }
+          } else { throw new Error(result.message); }
         } catch (err) {
           statusEl.className = "text-center font-heading font-bold text-sm text-rose-600";
           statusEl.textContent = "❌ Gagal mengunggah: " + err.message;
-        } finally {
-          btn.disabled = false;
-        }
+        } finally { btn.disabled = false; }
       };
       reader.readAsDataURL(file);
     }
