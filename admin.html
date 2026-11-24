@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal Admin — KKA Kelas 4 SD</title>
+  <title>Portal Admin Guru — TIK Kelas 4 SD</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -11,17 +11,34 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="firebase-config.js"></script>
   <style>
-    body { font-family: 'Andika', sans-serif; line-height: 1.4; background-color: #F1F5F9; }
+    body {
+      font-family: 'Andika', sans-serif;
+      line-height: 1.4;
+      background-color: #F1F5F9;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    input, textarea, select, .rich-editor {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
     h1, h2, h3, h4, button { font-family: 'Poppins', sans-serif; }
     .rich-editor { min-height: 110px; border: 2px solid #CBD5E1; border-radius: 0.75rem; padding: 0.75rem; background: white; outline: none; }
   </style>
 </head>
-<body class="text-slate-800">
+<body class="text-slate-800" oncontextmenu="return false;">
 
   <!-- ==================== LOGIN ADMIN ==================== -->
   <div id="admin-login-box" class="min-h-screen flex items-center justify-center p-4">
     <div class="bg-white max-w-md w-full p-8 rounded-3xl shadow-lg border border-slate-200">
-      <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">🔒 Area Terbatas Guru</span>
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">🔒 Area Terbatas Guru</span>
+        <a href="index.html" class="text-xs font-bold text-sky-600 hover:underline">← Kembali ke Siswa</a>
+      </div>
       <h1 class="text-2xl font-extrabold text-slate-900 mt-2 mb-1">Portal Admin TIK</h1>
       <p class="text-sm text-slate-500 mb-6">Kelola materi, bank soal 4 opsi dengan gambar, kisi-kisi, wall kelas, dan akun siswa.</p>
 
@@ -49,7 +66,10 @@
         <h1 class="text-xl font-extrabold text-indigo-700">🛠️ Dashboard Guru TIK Kelas 4</h1>
         <p class="text-xs text-slate-500">Perubahan otomatis tersinkron ke perangkat siswa.</p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex gap-2 flex-wrap">
+        <a href="index.html" class="bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs font-bold px-3 py-2 rounded-xl">
+          🎒 Lihat Halaman Siswa
+        </a>
         <button onclick="seedDefaultData()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl">
           ⚡ Isi Data Awal 6 Bab & Kisi-Kisi
         </button>
@@ -67,12 +87,12 @@
       <button onclick="showAdminTab('siswa')" class="admin-nav-btn bg-white text-slate-700 border text-sm font-bold px-4 py-2 rounded-xl">5. Kelola Akun Siswa</button>
     </div>
 
-    <!-- PANEL 1: MATERI & EDITOR FORMAT KAYA -->
+    <!-- PANEL 1: MATERI -->
     <section id="admin-tab-materi" class="admin-panel space-y-5">
       <div id="admin-materi-list" class="grid grid-cols-1 gap-5"></div>
     </section>
 
-    <!-- PANEL 2: SOAL 4 OPSI (A, B, C, D) & GAMBAR -->
+    <!-- PANEL 2: SOAL -->
     <section id="admin-tab-soal" class="admin-panel hidden space-y-6">
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <h2 class="text-lg font-extrabold mb-3" id="form-soal-title">➕ Tambah / Edit Soal Kuis (4 Opsi A-D)</h2>
@@ -154,7 +174,7 @@
       </div>
     </section>
 
-    <!-- PANEL 3: WALL KELAS (GURU POST, UPLOAD GAMBAR, KOMENTAR, EMOT & HAPUS) -->
+    <!-- PANEL 3: WALL KELAS -->
     <section id="admin-tab-wall" class="admin-panel hidden space-y-6">
       <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <h2 class="text-lg font-extrabold text-indigo-700 mb-1">📢 Buat Postingan / Pengumuman Guru di Wall Kelas</h2>
@@ -199,6 +219,47 @@
   </div>
 
   <script>
+    (function setupAdminGuard() {
+      document.addEventListener("keydown", function (e) {
+        const key = (e.key || "").toLowerCase();
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey && e.shiftKey && ["i", "j", "c", "k"].includes(key)) ||
+          (e.ctrlKey && ["u", "s", "p"].includes(key))
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      document.addEventListener("copy", function (e) {
+        const activeTag = document.activeElement ? document.activeElement.tagName : "";
+        if (!["INPUT", "TEXTAREA"].includes(activeTag) && !document.activeElement?.classList?.contains("rich-editor")) {
+          e.preventDefault();
+        }
+      });
+    })();
+
+    const _OBF_KEY = "TIK4SD_2026";
+    function obfDecode(cipherBase64) {
+      const raw = decodeURIComponent(escape(atob(cipherBase64)));
+      let out = "";
+      for (let i = 0; i < raw.length; i++) {
+        out += String.fromCharCode(raw.charCodeAt(i) ^ _OBF_KEY.charCodeAt(i % _OBF_KEY.length));
+      }
+      return out;
+    }
+
+    function getGasEndpoint() {
+      if (typeof GAS_WEB_APP_URL !== "undefined" && GAS_WEB_APP_URL && !GAS_WEB_APP_URL.includes("GANTI_")) {
+        return GAS_WEB_APP_URL;
+      }
+      if (typeof GAS_WEB_APP_ENCODED !== "undefined" && GAS_WEB_APP_ENCODED) {
+        return obfDecode(GAS_WEB_APP_ENCODED);
+      }
+      return "";
+    }
+
     let allSoal = [];
 
     auth.onAuthStateChanged(user => {
@@ -272,7 +333,7 @@
           const pdfs = b.pdfs || [];
           const pdfListHTML = pdfs.map((p, idx) => `
             <div class="flex items-center justify-between bg-slate-100 px-3 py-1.5 rounded-lg text-xs mt-1">
-              <a href="${p.viewUrl}" target="_blank" class="text-indigo-700 font-bold truncate max-w-[200px]">📄 ${p.title}</a>
+              <a href="${p.viewUrl}" target="_blank" rel="noopener noreferrer" class="text-indigo-700 font-bold truncate max-w-[200px]">📄 ${escapeHTML(p.title)}</a>
               <button onclick="removePdfFromBab('${b.id}', ${idx})" class="text-rose-600 font-bold">Hapus</button>
             </div>
           `).join("");
@@ -280,8 +341,8 @@
           container.innerHTML += `
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
               <div class="font-bold text-indigo-700">Bab ${b.nomor}</div>
-              <input id="judul-${b.id}" value="${b.judul}" class="w-full p-2 border rounded-xl font-bold text-sm" />
-              <textarea id="cp-${b.id}" rows="2" class="w-full p-2 border rounded-xl text-xs">${b.cp}</textarea>
+              <input id="judul-${b.id}" value="${escapeHTML(b.judul)}" class="w-full p-2 border rounded-xl font-bold text-sm" />
+              <textarea id="cp-${b.id}" rows="2" class="w-full p-2 border rounded-xl text-xs">${escapeHTML(b.cp)}</textarea>
               <div>
                 <label class="text-xs font-bold text-slate-700 mb-1 block">Isi Materi (Tebal, Miring, Underline, Bullet, Simbol):</label>
                 <div class="flex gap-1 mb-1.5 bg-slate-100 p-1.5 rounded-lg border">
@@ -291,7 +352,7 @@
                   <button type="button" onclick="formatText('${b.id}', 'bullet')" class="px-2.5 py-1 bg-white border rounded text-xs">• List</button>
                   <button type="button" onclick="formatText('${b.id}', 'symbol')" class="px-2.5 py-1 bg-white border rounded text-xs">⭐ Simbol</button>
                 </div>
-                <div id="editor-${b.id}" contenteditable="true" class="rich-editor">${b.isiHtml || b.ringkasan}</div>
+                <div id="editor-${b.id}" contenteditable="true" class="rich-editor">${b.isiHtml || escapeHTML(b.ringkasan)}</div>
               </div>
               <button onclick="updateMateri('${b.id}')" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl">Simpan Materi</button>
 
@@ -322,10 +383,10 @@
           const k = doc.data();
           box.innerHTML += `
             <div class="p-4 border rounded-xl grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
-              <input id="kk-tujuan-${k.no}" value="${k.tujuan}" class="md:col-span-2 p-2 border rounded-lg text-xs" />
-              <input id="kk-materi-${k.no}" value="${k.materi}" class="p-2 border rounded-lg text-xs" />
+              <input id="kk-tujuan-${k.no}" value="${escapeHTML(k.tujuan)}" class="md:col-span-2 p-2 border rounded-lg text-xs" />
+              <input id="kk-materi-${k.no}" value="${escapeHTML(k.materi)}" class="p-2 border rounded-lg text-xs" />
               <div class="flex gap-1">
-                <input id="kk-elemen-${k.no}" value="${k.elemen}" class="w-20 p-2 border rounded-lg text-xs" />
+                <input id="kk-elemen-${k.no}" value="${escapeHTML(k.elemen)}" class="w-20 p-2 border rounded-lg text-xs" />
                 <button onclick="saveKisiKisi(${k.no})" class="bg-indigo-600 text-white text-xs font-bold px-3 rounded-lg">Simpan</button>
               </div>
             </div>
@@ -344,20 +405,18 @@
           const s = doc.data();
           box.innerHTML += `
             <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border">
-              <div><b>${s.nama}</b> (Kelas ${s.kelas}) — Poin: ⭐ ${s.points}</div>
+              <div><b>${escapeHTML(s.nama)}</b> (Kelas ${escapeHTML(s.kelas)}) — Poin: ⭐ ${s.points}</div>
               <button onclick="deleteStudent('${s.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold text-xs px-3 py-1.5 rounded-lg">🗑️ Hapus Akun</button>
             </div>
           `;
         });
       });
 
-      // Listener Wall Kelas untuk Guru
       db.collection("wall_posts").orderBy("createdAt", "desc").limit(50).onSnapshot(snap => {
         renderAdminWallFeed(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       });
     }
 
-    // ==================== WALL KELAS GURU ====================
     async function adminCreateWallPost() {
       const authorName = document.getElementById("admin-wall-name").value.trim() || "Guru TIK";
       const content = document.getElementById("admin-wall-content").value.trim();
@@ -515,7 +574,6 @@
       }).join("");
     }
 
-    // ==================== MATERI, SOAL, KISI-KISI & SISWA ====================
     async function updateMateri(babId) {
       const isiHtml = document.getElementById("editor-" + babId).innerHTML;
       await db.collection("materi").doc(babId).update({
@@ -529,13 +587,15 @@
 
     function uploadMateriPdf(babId) {
       const input = document.getElementById("pdf-input-" + babId);
+      const endpoint = getGasEndpoint();
+      if (!endpoint) return alert("Endpoint unggah PDF belum dikonfigurasi.");
       if (!input.files.length) return alert("Pilih file PDF terlebih dahulu!");
       const file = input.files[0];
 
       const reader = new FileReader();
       reader.onload = async function () {
         const base64 = reader.result.split(",")[1];
-        const res = await fetch(GAS_WEB_APP_URL, {
+        const res = await fetch(endpoint, {
           method: "POST",
           body: JSON.stringify({ type: "materi", fileName: `${babId}_${file.name}`, mimeType: "application/pdf", base64 })
         });
@@ -643,9 +703,9 @@
           <div>
             <span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">${s.babId.toUpperCase()}</span>
             ${s.imageUrl ? `<img src="${s.imageUrl}" class="w-20 h-20 object-cover my-2 rounded border" />` : ''}
-            <p class="text-xs text-slate-500 mt-1 italic">"${s.stimulus}"</p>
-            <p class="font-bold text-sm mt-1">${idx + 1}. ${s.pertanyaan} (Kunci: ${s.kunci})</p>
-            <p class="text-xs text-emerald-700 font-bold mt-1">Penjelasan: ${s.penjelasan || '-'}</p>
+            <p class="text-xs text-slate-500 mt-1 italic">"${escapeHTML(s.stimulus)}"</p>
+            <p class="font-bold text-sm mt-1">${idx + 1}. ${escapeHTML(s.pertanyaan)} (Kunci: ${escapeHTML(s.kunci)})</p>
+            <p class="text-xs text-emerald-700 font-bold mt-1">Penjelasan: ${escapeHTML(s.penjelasan || '-')}</p>
           </div>
           <div class="flex gap-2 shrink-0">
             <button onclick="editSoal('${s.id}')" class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-lg">Edit</button>
